@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R: c(
     person('Lorenzo', 'Gini', role = "aut"),
     person('Julian', 'Kath', role = "aut"),
-    person('Gabriel', 'da Silva Zech', role = c("aut","cre"))
+    person('Gabriel', 'da Silva Zech', email = "gabrielszech@gmail.com", role = c("aut","cre"))
     )
 Maintainer: Gabriel da Silva Zech <gabrielszech@gmail.com>
 Description: A package that allows one to create wordclouds shaped like regions in a map. 
