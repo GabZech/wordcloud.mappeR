@@ -1,0 +1,31 @@
+Package: wordcloud.mappeR
+Type: Package
+Title: A package for creating wordcloud maps in R
+Version: 0.1.0
+Authors@R: c(
+    person('Lorenzo', 'Gini', role = "aut"),
+    person('Julian', 'Kath', role = "aut"),
+    person('Gabriel', 'da Silva Zech', role = c("aut","cre"))
+    )
+Maintainer: Gabriel da Silva Zech <gabrielszech@gmail.com>
+Description: A package that allows one to create wordclouds shaped like regions in a map. 
+    It relies on 'giscoR' for retreiving the shapes of regions and 'ggwordcloud' for creating the wordclouds.
+    The classification of regions is based on the European Union's NUTS geocode standard.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+Imports:
+    RColorBrewer,
+    dplyr,
+    ggplot2,
+    ggthemes,
+    ggwordcloud,
+    giscoR,
+    magick,
+    magrittr,
+    sf,
+    png
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

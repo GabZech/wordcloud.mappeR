@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Gabriel da Silva Zech, Julian Kath and Lorenzo Gini" />
+
+
+<title>wordcloud.mappeR</title>
+
+<script src="index_files/header-attrs-2.11/header-attrs.js"></script>
+<script src="index_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="index_files/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><code>wordcloud.mappeR</code></h1>
+<h3 class="subtitle">A package for creating wordcloud maps in R</h3>
+<h4 class="author"><em>Gabriel da Silva Zech, Julian Kath and Lorenzo Gini</em></h4>
+
+</div>
+
+
+<p><br></p>
+<hr />
+<div id="introduction-to-wordcloud.mapper" class="section level1">
+<h1>Introduction to <code>wordcloud.mappeR</code></h1>
+<hr />
+<p><code>wordcloud.mappeR</code> is a package for R that allows one to <strong>create wordclouds shaped like regions in a map</strong>. Such visualisations are especially useful when communicating sets of data that consist of many different variables and each variable is attributed to a specific region and size of occurrence. Take the example below, a dataset containing the name of the 100 biggest companies (in terms of estimated number of employees) for each region in Germany and Italy.</p>
+<p><img src="index_files/images/merged_DEU_ITA.png" title="Wordcloud maps for Germany and Italy" /></p>
+<p><br></p>
+<p>The classification of regions used here follows the European Union’s <a href="https://en.wikipedia.org/wiki/Nomenclature_of_Territorial_Units_for_Statistics">Nomenclature of Territorial Units for Statistics (NUTS)</a>, a geocode standard for referencing the subdivisions of countries. The advantage of using this system is that the classification of regions across countries is <strong>standardised and hierarchically structured</strong>. For instance, Germany has the base code <em>DE</em> (NUTS 0), the state of Bavaria has the code <em>DE2</em> (NUTS 1), its subregion of Oberbayern has the code <em>DE21</em> (NUTS 2) and the city of Munich has the code <em>DE212</em> (NUTS 3). Since each region is given a unique identifier which is directly linked to the regional level above it, it is fairly easy to identify and match any dataset to these regions.</p>
+<p>However, this means that <strong>this package currently only works for creating wordcloud maps for EU countries</strong>. For an overview of the NUTS regions and levels, you can browse the available <a href="https://ec.europa.eu/eurostat/web/nuts/nuts-maps">maps for each EU country</a> or use <a href="https://ec.europa.eu/statistical-atlas/viewer/?config=typologies.json&amp;">this interactive map</a> instead. If you have a dataset containing postcodes and want to convert these to NUTS regions, you can find the <a href="https://ec.europa.eu/eurostat/web/nuts/correspondence-tables/postcodes-and-nuts">correspondence tables here</a>.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="how-to-use-wordcloud.mapper" class="section level1">
+<h1>How to use <code>wordcloud.mappeR</code></h1>
+<hr />
+<div id="installing-the-package" class="section level2">
+<h2>Installing the package</h2>
+<p>Currently the package can only be installed through Github. We plan on publishing it to CRAN some time soon.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install through Github</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;GabZech/wordcloud.mappeR&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># load the package</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wordcloud.mappeR)</span></code></pre></div>
+<p><br></p>
+<hr />
+</div>
+<div id="the-input-data" class="section level2">
+<h2>The input data</h2>
+<div id="format" class="section level3">
+<h3>Format</h3>
+<p>The input data must be in the format of a table (i.e. data frame, tibble) containing three columns with the following data types:</p>
+<ol style="list-style-type: decimal">
+<li>A character column with <strong>words</strong> (e.g. the name of the companies)</li>
+<li>A numeric column with <strong>numbers</strong> (e.g. the number of employees)</li>
+<li>A character column with <strong>NUTS region codes</strong> (e.g. the states of a country)</li>
+</ol>
+<p>Therefore, this is the minimal structure that the input data requires:</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["words"],"name":[1],"type":["chr"],"align":["left"]},{"label":["frequencies"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["nuts_codes"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"NA","2":"NA","3":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><br></p>
+<hr />
+</div>
+<div id="datasets-included-in-the-package" class="section level3">
+<h3>Datasets included in the package</h3>
+<p>There are currently two datasets included in the package which we’ve obtained by transforming parts of the 2019 Global Company Dataset made freely available by People Data Labs <a href="https://www.kaggle.com/peopledatalabssf/free-7-million-company-dataset">here</a>. The original dataset contains an estimation of the number of employees in 2019 for over 7 million companies around the world. From this, we produced the following subsets:</p>
+<ul>
+<li><strong><code>companies_DEU</code></strong> contains the 100 companies with the largest estimated number of employees for each state (NUTS 1) in Germany.</li>
+<li><strong><code>companies_ITA</code></strong> containes the same type fo data but for the regions (NUTS 2) in Italy.</li>
+</ul>
+<p>These can be loaded simply by using <code>data("name_of_dataset")</code> after loading the package to your R environment.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;companies_DEU&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>companies_DEU</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["employees"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["code"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"mahle","2":"6136","3":"DE1"},{"1":"hugo boss","2":"4165","3":"DE1"},{"1":"lidl","2":"3603","3":"DE1"},{"1":"festo","2":"3246","3":"DE1"},{"1":"gft group","2":"2772","3":"DE1"},{"1":"m+w group","2":"2376","3":"DE1"},{"1":"mann+hummel group","2":"1982","3":"DE1"},{"1":"maquet getinge group","2":"1831","3":"DE1"},{"1":"sick","2":"1683","3":"DE1"},{"1":"heidelberg","2":"1546","3":"DE1"},{"1":"bertrandt","2":"1482","3":"DE1"},{"1":"carl zeiss vision","2":"1407","3":"DE1"},{"1":"freudenberg sealing technologies","2":"1310","3":"DE1"},{"1":"webasto","2":"1296","3":"DE1"},{"1":"ibm deutschland gmbh","2":"1222","3":"DE1"},{"1":"dekra","2":"1176","3":"DE1"},{"1":"daimler tss","2":"1149","3":"DE1"},{"1":"hartmann group","2":"1089","3":"DE1"},{"1":"eberspaecher","2":"1064","3":"DE1"},{"1":"leica biosystems","2":"1052","3":"DE1"},{"1":"zeiss group","2":"1012","3":"DE1"},{"1":"lbbw","2":"989","3":"DE1"},{"1":"mhp – a porsche company","2":"979","3":"DE1"},{"1":"university of heidelberg","2":"943","3":"DE1"},{"1":"selbstständig","2":"940","3":"DE1"},{"1":"ed. züblin ag","2":"830","3":"DE1"},{"1":"enbw energie baden-württemberg ag","2":"783","3":"DE1"},{"1":"dkfz german cancer research center","2":"782","3":"DE1"},{"1":"pepperl+fuchs","2":"746","3":"DE1"},{"1":"bechtle","2":"746","3":"DE1"},{"1":"swr","2":"710","3":"DE1"},{"1":"berner - experts with passion","2":"662","3":"DE1"},{"1":"personal assistant services","2":"652","3":"DE1"},{"1":"embl","2":"620","3":"DE1"},{"1":"trelleborg sealing solutions","2":"619","3":"DE1"},{"1":"rolls-royce power systems ag","2":"616","3":"DE1"},{"1":"mbtech group gmbh & co. kgaa","2":"583","3":"DE1"},{"1":"bizerba","2":"548","3":"DE1"},{"1":"freudenberg","2":"540","3":"DE1"},{"1":"evobus","2":"528","3":"DE1"},{"1":"fichtner consulting engineers","2":"523","3":"DE1"},{"1":"university of konstanz","2":"523","3":"DE1"},{"1":"marquardt group","2":"522","3":"DE1"},{"1":"walter ag (walter tools)","2":"498","3":"DE1"},{"1":"ich ag","2":"495","3":"DE1"},{"1":"hansgrohe","2":"479","3":"DE1"},{"1":"ich","2":"475","3":"DE1"},{"1":"sas automotive","2":"468","3":"DE1"},{"1":"mhp","2":"467","3":"DE1"},{"1":"notariat","2":"460","3":"DE1"},{"1":"frei","2":"457","3":"DE1"},{"1":"automotive lighting","2":"450","3":"DE1"},{"1":"coperion","2":"412","3":"DE1"},{"1":"chg-meridian","2":"403","3":"DE1"},{"1":"voith industrial services","2":"392","3":"DE1"},{"1":"haufe group","2":"390","3":"DE1"},{"1":"ptv group","2":"389","3":"DE1"},{"1":"herrenknecht ag","2":"387","3":"DE1"},{"1":"mtu","2":"370","3":"DE1"},{"1":"rutronik electronics worldwide","2":"357","3":"DE1"},{"1":"horváth & partners management consultants","2":"356","3":"DE1"},{"1":"duravit ag","2":"350","3":"DE1"},{"1":"etas","2":"347","3":"DE1"},{"1":"bosch engineering gmbh","2":"340","3":"DE1"},{"1":"ernst & young j&m management consulting gmbh","2":"339","3":"DE1"},{"1":"karatbars international","2":"326","3":"DE1"},{"1":"conductix-wampfler group","2":"323","3":"DE1"},{"1":"eberhard karls universität tübingen","2":"317","3":"DE1"},{"1":"bis salamis (m&i)","2":"304","3":"DE1"},{"1":"gelita","2":"298","3":"DE1"},{"1":"corden pharma - a full-service cdmo","2":"298","3":"DE1"},{"1":"infotec","2":"296","3":"DE1"},{"1":"kavo dental","2":"293","3":"DE1"},{"1":"musikschule","2":"285","3":"DE1"},{"1":"eissmann group automotive","2":"279","3":"DE1"},{"1":"ecole maternelle","2":"279","3":"DE1"},{"1":"sto se & co. kgaa","2":"274","3":"DE1"},{"1":"mackevision","2":"271","3":"DE1"},{"1":"u.s. european command","2":"270","3":"DE1"},{"1":"bürkert fluid control systems","2":"266","3":"DE1"},{"1":"university of freiburg","2":"266","3":"DE1"},{"1":"fuchs petrolub group","2":"264","3":"DE1"},{"1":"vetter pharma-fertigung gmbh & co. kg","2":"262","3":"DE1"},{"1":"pilz","2":"257","3":"DE1"},{"1":"all for one steeb ag","2":"254","3":"DE1"},{"1":"avira","2":"252","3":"DE1"},{"1":"hima","2":"245","3":"DE1"},{"1":"wild flavors, inc.","2":"238","3":"DE1"},{"1":"schunk","2":"237","3":"DE1"},{"1":"sfeir","2":"235","3":"DE1"},{"1":"freudenberg filtration technologies","2":"233","3":"DE1"},{"1":"ggh","2":"230","3":"DE1"},{"1":"pharmalex","2":"225","3":"DE1"},{"1":"vector informatik gmbh","2":"223","3":"DE1"},{"1":"putzmeister","2":"221","3":"DE1"},{"1":"versicherungsmakler","2":"212","3":"DE1"},{"1":"gmg","2":"208","3":"DE1"},{"1":"universität ulm","2":"206","3":"DE1"},{"1":"cenit","2":"205","3":"DE1"},{"1":"prettl group","2":"198","3":"DE1"},{"1":"siemens","2":"87381","3":"DE2"},{"1":"continental","2":"28156","3":"DE2"},{"1":"allianz","2":"18824","3":"DE2"},{"1":"siemens healthcare","2":"18436","3":"DE2"},{"1":"adidas","2":"18402","3":"DE2"},{"1":"bmw group","2":"18063","3":"DE2"},{"1":"sandoz","2":"8315","3":"DE2"},{"1":"gfk","2":"7104","3":"DE2"},{"1":"schaeffler","2":"6151","3":"DE2"},{"1":"the linde group","2":"5937","3":"DE2"},{"1":"audi ag","2":"5425","3":"DE2"},{"1":"media markt","2":"4985","3":"DE2"},{"1":"bosch rexroth","2":"4645","3":"DE2"},{"1":"puma","2":"4424","3":"DE2"},{"1":"osram","2":"4237","3":"DE2"},{"1":"unify","2":"3515","3":"DE2"},{"1":"leoni","2":"3263","3":"DE2"},{"1":"man diesel & turbo","2":"3223","3":"DE2"},{"1":"brose group","2":"2799","3":"DE2"},{"1":"tüv süd","2":"2739","3":"DE2"},{"1":"munich re (group)","2":"2603","3":"DE2"},{"1":"knorr-bremse","2":"2562","3":"DE2"},{"1":"bsh home appliances group","2":"2438","3":"DE2"},{"1":"allianz global corporate & specialty (agcs)","2":"2380","3":"DE2"},{"1":"european patent office","2":"2222","3":"DE2"},{"1":"rohde & schwarz","2":"2176","3":"DE2"},{"1":"praxis heilpraktiker für psychotherapie","2":"2089","3":"DE2"},{"1":"hypovereinsbank - unicredit bank ag","2":"1990","3":"DE2"},{"1":"roland berger","2":"1946","3":"DE2"},{"1":"rehau","2":"1946","3":"DE2"},{"1":"porsche","2":"1945","3":"DE2"},{"1":"technische universität münchen","2":"1770","3":"DE2"},{"1":"dachser se","2":"1703","3":"DE2"},{"1":"bosch security systems","2":"1695","3":"DE2"},{"1":"peri","2":"1616","3":"DE2"},{"1":"dräxlmaier group","2":"1561","3":"DE2"},{"1":"wacker chemie","2":"1556","3":"DE2"},{"1":"solid system team gmbh","2":"1521","3":"DE2"},{"1":"krones ag","2":"1478","3":"DE2"},{"1":"giesecke & devrient","2":"1477","3":"DE2"},{"1":"knauf","2":"1375","3":"DE2"},{"1":"arztpraxis","2":"1338","3":"DE2"},{"1":"bsh home appliances group","2":"1255","3":"DE2"},{"1":"allianz technology","2":"1207","3":"DE2"},{"1":"durr systems, inc.","2":"1029","3":"DE2"},{"1":"epcos","2":"1006","3":"DE2"},{"1":"tüv süd","2":"1001","3":"DE2"},{"1":"kromberg & schubert","2":"971","3":"DE2"},{"1":"coriant, inc.","2":"961","3":"DE2"},{"1":"sap hybris","2":"862","3":"DE2"},{"1":"eagleburgmann","2":"795","3":"DE2"},{"1":"suse","2":"745","3":"DE2"},{"1":"elektrobit (eb)","2":"725","3":"DE2"},{"1":"brainlab","2":"703","3":"DE2"},{"1":"wacker neuson se","2":"686","3":"DE2"},{"1":"prosiebensat.1 media se","2":"679","3":"DE2"},{"1":"adidas group","2":"663","3":"DE2"},{"1":"kuka robotics","2":"650","3":"DE2"},{"1":"tu münchen","2":"641","3":"DE2"},{"1":"qimonda","2":"636","3":"DE2"},{"1":"deloitte deutschland","2":"634","3":"DE2"},{"1":"sellbytel group","2":"630","3":"DE2"},{"1":"bayer technology services","2":"599","3":"DE2"},{"1":"msg systems ag","2":"583","3":"DE2"},{"1":"hemmersbach gmbh & co. kg","2":"581","3":"DE2"},{"1":"fraunhofer-gesellschaft","2":"562","3":"DE2"},{"1":"sky deutschland gmbh","2":"552","3":"DE2"},{"1":"harting","2":"531","3":"DE2"},{"1":"multivac group","2":"526","3":"DE2"},{"1":"dassault systèmes 3dexcite","2":"505","3":"DE2"},{"1":"ebv elektronik","2":"462","3":"DE2"},{"1":"kontron","2":"447","3":"DE2"},{"1":"westwing home & living","2":"426","3":"DE2"},{"1":"university of bayreuth","2":"424","3":"DE2"},{"1":"s.oliver bernd freier gmbh & co. kg","2":"422","3":"DE2"},{"1":"zollner elektronik ag","2":"411","3":"DE2"},{"1":"check24 vergleichsportal","2":"409","3":"DE2"},{"1":"helmholtzzentrum münchen","2":"406","3":"DE2"},{"1":"cancom","2":"402","3":"DE2"},{"1":"logwin air+ocean","2":"394","3":"DE2"},{"1":"university of regensburg","2":"382","3":"DE2"},{"1":"wittur group","2":"379","3":"DE2"},{"1":"bericap","2":"378","3":"DE2"},{"1":"university of bielefeld","2":"377","3":"DE2"},{"1":"noerr llp","2":"372","3":"DE2"},{"1":"semikron","2":"371","3":"DE2"},{"1":"giesecke+devrient currency technology","2":"363","3":"DE2"},{"1":"flughafen münchen gmbh","2":"347","3":"DE2"},{"1":"arri","2":"347","3":"DE2"},{"1":"premium aerotec","2":"338","3":"DE2"},{"1":"media-saturn","2":"337","3":"DE2"},{"1":"preh group","2":"327","3":"DE2"},{"1":"hilti germany","2":"323","3":"DE2"},{"1":"h.c. starck","2":"320","3":"DE2"},{"1":"amway europe","2":"319","3":"DE2"},{"1":"zooplus ag","2":"311","3":"DE2"},{"1":"friedrich-alexander-universität erlangen-nürnberg","2":"309","3":"DE2"},{"1":"serviceplan group","2":"308","3":"DE2"},{"1":"eac","2":"305","3":"DE2"},{"1":"sam solutions","2":"296","3":"DE2"},{"1":"bayer healthcare","2":"12558","3":"DE3"},{"1":"zalando se","2":"3389","3":"DE3"},{"1":"deutsche bahn","2":"2845","3":"DE3"},{"1":"springer nature","2":"2541","3":"DE3"},{"1":"biotronik","2":"1999","3":"DE3"},{"1":"charité","2":"1733","3":"DE3"},{"1":"freie universität berlin","2":"1531","3":"DE3"},{"1":"humboldt-universität zu berlin","2":"1260","3":"DE3"},{"1":"axel springer se","2":"1178","3":"DE3"},{"1":"hellofresh","2":"1113","3":"DE3"},{"1":"kpmg deutschland","2":"1002","3":"DE3"},{"1":"iav gmbh","2":"832","3":"DE3"},{"1":"atotech group","2":"802","3":"DE3"},{"1":"technische universität berlin","2":"778","3":"DE3"},{"1":"foodpanda","2":"692","3":"DE3"},{"1":"auto1","2":"667","3":"DE3"},{"1":"!k7 records","2":"655","3":"DE3"},{"1":"rocket internet se","2":"596","3":"DE3"},{"1":"stepstone","2":"575","3":"DE3"},{"1":"db engineering & consulting gmbh","2":"574","3":"DE3"},{"1":"foodora","2":"567","3":"DE3"},{"1":"airberlin","2":"545","3":"DE3"},{"1":"system one","2":"525","3":"DE3"},{"1":"ohne","2":"518","3":"DE3"},{"1":"steuerberater","2":"498","3":"DE3"},{"1":"bundeswehr wir. dienen. deutschland.","2":"448","3":"DE3"},{"1":"delivery hero","2":"419","3":"DE3"},{"1":"soundcloud","2":"407","3":"DE3"},{"1":"storck","2":"388","3":"DE3"},{"1":"native instruments","2":"362","3":"DE3"},{"1":"lufthansa intouch","2":"341","3":"DE3"},{"1":"babbel","2":"324","3":"DE3"},{"1":"max delbrück center","2":"316","3":"DE3"},{"1":"architect / interior designer","2":"313","3":"DE3"},{"1":"cms hasche sigle","2":"304","3":"DE3"},{"1":"victoria","2":"283","3":"DE3"},{"1":"ovb vermögensberatung ag","2":"279","3":"DE3"},{"1":"idealo internet gmbh","2":"276","3":"DE3"},{"1":"transparency international","2":"273","3":"DE3"},{"1":"getyourguide","2":"272","3":"DE3"},{"1":"immobilienscout24","2":"269","3":"DE3"},{"1":"bosch software innovations","2":"268","3":"DE3"},{"1":"climate-kic","2":"265","3":"DE3"},{"1":"home24 ag","2":"252","3":"DE3"},{"1":"atheneum","2":"247","3":"DE3"},{"1":"european youth parliament (eyp)","2":"245","3":"DE3"},{"1":"n26 group","2":"243","3":"DE3"},{"1":"n.n.","2":"236","3":"DE3"},{"1":"germany trade & invest","2":"233","3":"DE3"},{"1":"quandoo","2":"231","3":"DE3"},{"1":"de gruyter","2":"226","3":"DE3"},{"1":"ableton","2":"226","3":"DE3"},{"1":"mobisol group","2":"224","3":"DE3"},{"1":"bmg - the new music company","2":"224","3":"DE3"},{"1":"bundesanstalt für materialforschung und -prüfung","2":"221","3":"DE3"},{"1":"researchgate","2":"220","3":"DE3"},{"1":"leonardo hotels","2":"218","3":"DE3"},{"1":"goeuro","2":"215","3":"DE3"},{"1":"weltn24 gmbh","2":"213","3":"DE3"},{"1":"chiltern railways","2":"211","3":"DE3"},{"1":"ver.di","2":"202","3":"DE3"},{"1":"helmholtz zentrum berlin","2":"202","3":"DE3"},{"1":"freiberufler","2":"200","3":"DE3"},{"1":"taxi drivers","2":"191","3":"DE3"},{"1":"fyber","2":"188","3":"DE3"},{"1":"wbs training ag","2":"188","3":"DE3"},{"1":"aperto - an ibm company","2":"188","3":"DE3"},{"1":"hengeler mueller","2":"186","3":"DE3"},{"1":"bmg - the new music company","2":"184","3":"DE3"},{"1":"zalando lounge","2":"181","3":"DE3"},{"1":"adjust.com","2":"180","3":"DE3"},{"1":"un world food programme wfp","2":"180","3":"DE3"},{"1":"kde","2":"178","3":"DE3"},{"1":"applift","2":"175","3":"DE3"},{"1":"kcr","2":"174","3":"DE3"},{"1":"visual meta gmbh","2":"170","3":"DE3"},{"1":"4flow","2":"169","3":"DE3"},{"1":"ecovis international","2":"168","3":"DE3"},{"1":"bundesdruckerei","2":"163","3":"DE3"},{"1":"gw","2":"162","3":"DE3"},{"1":"ruptly","2":"162","3":"DE3"},{"1":"beckers group","2":"161","3":"DE3"},{"1":"blacklane","2":"160","3":"DE3"},{"1":"wooga","2":"159","3":"DE3"},{"1":"bild gmbh & co. kg","2":"159","3":"DE3"},{"1":"c3 creative code and content gmbh","2":"158","3":"DE3"},{"1":"sociomantic labs","2":"154","3":"DE3"},{"1":"universität der künste berlin","2":"154","3":"DE3"},{"1":"spark networks","2":"152","3":"DE3"},{"1":"devk versicherungen","2":"152","3":"DE3"},{"1":"glispa global group","2":"149","3":"DE3"},{"1":"wellstar","2":"148","3":"DE3"},{"1":"mytoys group","2":"148","3":"DE3"},{"1":"germania airlines (fluggesellschaft)","2":"146","3":"DE3"},{"1":"fraunhofer fokus","2":"145","3":"DE3"},{"1":"heimat werbeagentur gmbh","2":"139","3":"DE3"},{"1":"]init[ - services for the esociety","2":"139","3":"DE3"},{"1":"kieback&peter","2":"137","3":"DE3"},{"1":"institute for cultural diplomacy","2":"134","3":"DE3"},{"1":"gch hotel group","2":"133","3":"DE3"},{"1":"burger king®","2":"478","3":"DE4"},{"1":"university of potsdam","2":"379","3":"DE4"},{"1":"btu cottbus","2":"264","3":"DE4"},{"1":"gfz-potsdam","2":"191","3":"DE4"},{"1":"hasso plattner institute","2":"189","3":"DE4"},{"1":"pas","2":"161","3":"DE4"},{"1":"deutsche rentenversicherung","2":"145","3":"DE4"},{"1":"ihp","2":"125","3":"DE4"},{"1":"continentale krankenversicherung a.g:","2":"120","3":"DE4"},{"1":"european university viadrina","2":"107","3":"DE4"},{"1":"friedrich-naumann-stiftung für die freiheit","2":"107","3":"DE4"},{"1":"ufa serial drama gmbh","2":"101","3":"DE4"},{"1":"pik - potsdam institute for climate impact research","2":"99","3":"DE4"},{"1":"art department","2":"92","3":"DE4"},{"1":"filmuniversität babelsberg konrad wolf","2":"82","3":"DE4"},{"1":"deutsche rentenversicherung berlin brandenburg auskunfts- und beratungsstelle","2":"76","3":"DE4"},{"1":"ufa gmbh","2":"73","3":"DE4"},{"1":"kik textilien und non-food gmbh","2":"71","3":"DE4"},{"1":"leonhard ventures","2":"66","3":"DE4"},{"1":"enertrag ag","2":"61","3":"DE4"},{"1":"lekam","2":"52","3":"DE4"},{"1":"mba universität potsdam","2":"51","3":"DE4"},{"1":"spitzke se","2":"49","3":"DE4"},{"1":"meab (middle east & africa bank)","2":"49","3":"DE4"},{"1":"seerene","2":"47","3":"DE4"},{"1":"vem","2":"44","3":"DE4"},{"1":"german institute of human nutrition potsdam-rehbruecke","2":"44","3":"DE4"},{"1":"leibniz-institut für astrophysik potsdam (aip)","2":"43","3":"DE4"},{"1":"flightright","2":"42","3":"DE4"},{"1":"reinike s. a.","2":"41","3":"DE4"},{"1":"zeppelin rental gmbh & co. kg","2":"41","3":"DE4"},{"1":"tertia berufsförderung gmbh & co. kg bildungsträger","2":"40","3":"DE4"},{"1":"stadt frankfurt","2":"40","3":"DE4"},{"1":"natgas ag","2":"39","3":"DE4"},{"1":"ingenieurbüro","2":"38","3":"DE4"},{"1":"biella","2":"36","3":"DE4"},{"1":"orafol europe gmbh","2":"34","3":"DE4"},{"1":"facton","2":"34","3":"DE4"},{"1":"igefa handelsgesellschaft mbh & co. kg","2":"33","3":"DE4"},{"1":"arlanis reply ag","2":"32","3":"DE4"},{"1":"aktive rentner","2":"32","3":"DE4"},{"1":"smi sensomotoric instruments gmbh","2":"31","3":"DE4"},{"1":"volkswagen group future center europe gmbh","2":"31","3":"DE4"},{"1":"media partisans","2":"30","3":"DE4"},{"1":"reflexite corporation","2":"29","3":"DE4"},{"1":"isqi gmbh","2":"29","3":"DE4"},{"1":"lkk","2":"27","3":"DE4"},{"1":"asgoodasnew electronics gmbh","2":"27","3":"DE4"},{"1":"handels- und dienstleistungsunternehmen","2":"26","3":"DE4"},{"1":"aleo solar","2":"26","3":"DE4"},{"1":"charles vögele trading ag","2":"25","3":"DE4"},{"1":"th wildau [fh]","2":"24","3":"DE4"},{"1":"hvt","2":"22","3":"DE4"},{"1":"institute for advanced sustainability studies (iass)","2":"22","3":"DE4"},{"1":"mounting systems gmbh","2":"21","3":"DE4"},{"1":"ebay kleinanzeigen","2":"21","3":"DE4"},{"1":"anecom aerotest","2":"20","3":"DE4"},{"1":"arvato direct services potsdam gmbh","2":"20","3":"DE4"},{"1":"komoot","2":"20","3":"DE4"},{"1":"ii-vi highyag","2":"19","3":"DE4"},{"1":"leval sa","2":"19","3":"DE4"},{"1":"grey labelz gmbh","2":"19","3":"DE4"},{"1":"securitas gmbh sicherheitsdienste","2":"18","3":"DE4"},{"1":"havelland kliniken gmbh","2":"17","3":"DE4"},{"1":"verti versicherung ag","2":"17","3":"DE4"},{"1":"way systems","2":"16","3":"DE4"},{"1":"f&p stock solution gmbh","2":"16","3":"DE4"},{"1":"tlc construction","2":"16","3":"DE4"},{"1":"hps gesundheitscloud ggmbh","2":"16","3":"DE4"},{"1":"health focus gmbh","2":"16","3":"DE4"},{"1":"hochschule für musik hanns eisler","2":"15","3":"DE4"},{"1":"friedrich-naumann-stiftung für die freiheit","2":"15","3":"DE4"},{"1":"volkswagen design center potsdam gmbh","2":"15","3":"DE4"},{"1":"smacc gmbh","2":"15","3":"DE4"},{"1":"asklepios fachklinikum","2":"15","3":"DE4"},{"1":"energiequelle","2":"15","3":"DE4"},{"1":"d-labs gmbh","2":"14","3":"DE4"},{"1":"derdack gmbh","2":"14","3":"DE4"},{"1":"ib-bank-systems gmbh","2":"14","3":"DE4"},{"1":"analyticon discovery","2":"14","3":"DE4"},{"1":"cockpit4u aviation service","2":"14","3":"DE4"},{"1":"pck raffinerie gmbh","2":"13","3":"DE4"},{"1":"tourismus-marketing + pr","2":"13","3":"DE4"},{"1":"allbau software","2":"13","3":"DE4"},{"1":"medienboard berlin-brandenburg gmbh","2":"13","3":"DE4"},{"1":"5pro software","2":"13","3":"DE4"},{"1":"paulcamper","2":"13","3":"DE4"},{"1":"alblas int. transport b.v.","2":"13","3":"DE4"},{"1":"porcelaingres gmbh","2":"13","3":"DE4"},{"1":"fti engineering network gmbh","2":"13","3":"DE4"},{"1":"studio babelsberg","2":"13","3":"DE4"},{"1":"landeshauptstadt potsdam","2":"13","3":"DE4"},{"1":"lr medienverlag und druckerei gmbh","2":"12","3":"DE4"},{"1":"terrot gmbh","2":"12","3":"DE4"},{"1":"ems - electronic media school / schule für elektronische medien gmbh","2":"12","3":"DE4"},{"1":"institute bruno schmaeling consulting group","2":"12","3":"DE4"},{"1":"valsight gmbh","2":"12","3":"DE4"},{"1":"interstuhl büromöbel","2":"12","3":"DE4"},{"1":"bbis berlin brandenburg international school","2":"12","3":"DE4"},{"1":"dls land und see speditionsgesellschaft mbh","2":"12","3":"DE4"},{"1":"university of bremen","2":"805","3":"DE5"},{"1":"kaefer","2":"710","3":"DE5"},{"1":"jacobs university bremen","2":"360","3":"DE5"},{"1":"röhlig logistics","2":"340","3":"DE5"},{"1":"ohb system","2":"281","3":"DE5"},{"1":"hochschule bremen","2":"227","3":"DE5"},{"1":"blg logistics group ag & co. kg","2":"206","3":"DE5"},{"1":"atlas elektronik","2":"135","3":"DE5"},{"1":"psm company","2":"118","3":"DE5"},{"1":"hansa-flex ag","2":"111","3":"DE5"},{"1":"igel technology","2":"108","3":"DE5"},{"1":"abat","2":"102","3":"DE5"},{"1":"hmmh multimediahaus ag","2":"91","3":"DE5"},{"1":"saacke gmbh","2":"91","3":"DE5"},{"1":"ohb system","2":"85","3":"DE5"},{"1":"radio bremen","2":"84","3":"DE5"},{"1":"deutsche windtechnik ag","2":"80","3":"DE5"},{"1":"eurogate group","2":"79","3":"DE5"},{"1":"dylangroup","2":"73","3":"DE5"},{"1":"marum - center for marine environmental sciences, university of bremen","2":"73","3":"DE5"},{"1":"svl","2":"65","3":"DE5"},{"1":"gesundheit nord - klinikverbund bremen","2":"64","3":"DE5"},{"1":"inros lackner ag","2":"63","3":"DE5"},{"1":"bego bremer goldschlägerei wilh. herbst gmbh & co. kg","2":"61","3":"DE5"},{"1":"noi","2":"58","3":"DE5"},{"1":"leschaco - lexzau scharbau gmbh & co. kg","2":"57","3":"DE5"},{"1":"allgeier enterprise services ag","2":"56","3":"DE5"},{"1":"levant","2":"55","3":"DE5"},{"1":"contact software","2":"54","3":"DE5"},{"1":"fr. lürssen werft gmbh & co. kg","2":"54","3":"DE5"},{"1":"vector foiltec","2":"53","3":"DE5"},{"1":"salt and pepper","2":"52","3":"DE5"},{"1":"unicar","2":"51","3":"DE5"},{"1":"team neusta unternehmensgruppe","2":"51","3":"DE5"},{"1":"cts eventim solutions gmbh","2":"49","3":"DE5"},{"1":"max planck institute for marine microbiology","2":"46","3":"DE5"},{"1":"sgs germany gmbh","2":"46","3":"DE5"},{"1":"ipsen logistics gmbh","2":"44","3":"DE5"},{"1":"winit","2":"43","3":"DE5"},{"1":"wpd offshore solutions gmbh","2":"42","3":"DE5"},{"1":"swb ag","2":"39","3":"DE5"},{"1":"fraunhofer mevis","2":"39","3":"DE5"},{"1":"sloman neptun shipping & transport gmbh","2":"34","3":"DE5"},{"1":"not founded yet","2":"34","3":"DE5"},{"1":"dbh logistics it ag","2":"33","3":"DE5"},{"1":"allgeier it solutions gmbh","2":"33","3":"DE5"},{"1":"bips","2":"32","3":"DE5"},{"1":"nuevo softwarehouse","2":"32","3":"DE5"},{"1":"construktiv gmbh","2":"31","3":"DE5"},{"1":"bego implant systems gmbh & co. kg","2":"30","3":"DE5"},{"1":"svb","2":"30","3":"DE5"},{"1":"meissner bolte","2":"29","3":"DE5"},{"1":"nordsee gmbh","2":"29","3":"DE5"},{"1":"c. melchers gmbh & co. kg","2":"28","3":"DE5"},{"1":"biba - bremer institut für produktion und logistik gmbh","2":"28","3":"DE5"},{"1":"bremen international graduate school of social sciences","2":"28","3":"DE5"},{"1":"leibniz center for tropical marine ecology (zmt) gmbh","2":"28","3":"DE5"},{"1":"fun factory gmbh","2":"27","3":"DE5"},{"1":"weiss-rohlig india private ltd.","2":"26","3":"DE5"},{"1":"deutsche see gmbh","2":"26","3":"DE5"},{"1":"mevis medical solutions ag","2":"25","3":"DE5"},{"1":"die sparkasse bremen ag","2":"25","3":"DE5"},{"1":"flyline tele sales & services gmbh (british airways)","2":"25","3":"DE5"},{"1":"pandi","2":"24","3":"DE5"},{"1":"hec gmbh","2":"23","3":"DE5"},{"1":"scalors gmbh","2":"23","3":"DE5"},{"1":"reetec gmbh","2":"23","3":"DE5"},{"1":"bvl international - bundesvereinigung logistik (bvl) e.v.","2":"23","3":"DE5"},{"1":"sikora ag","2":"23","3":"DE5"},{"1":"bremen motors sa","2":"22","3":"DE5"},{"1":"rts wind ag","2":"22","3":"DE5"},{"1":"bühnen gmbh","2":"21","3":"DE5"},{"1":"hansa management services private limited","2":"20","3":"DE5"},{"1":"german tanker shipping group","2":"20","3":"DE5"},{"1":"bremer kreditbank ag","2":"20","3":"DE5"},{"1":"gestra ag","2":"20","3":"DE5"},{"1":"traum-ferienwohnungen gmbh","2":"19","3":"DE5"},{"1":"g.o. cross media production","2":"19","3":"DE5"},{"1":"sv werder bremen gmbh & co kg aa","2":"19","3":"DE5"},{"1":"theater bremen gmbh","2":"18","3":"DE5"},{"1":"interwall gmbh","2":"17","3":"DE5"},{"1":"zero clothing gmbh & co. kg","2":"17","3":"DE5"},{"1":"adler solar services gmbh","2":"17","3":"DE5"},{"1":"nehlsen gmbh & co. kg","2":"16","3":"DE5"},{"1":"bias","2":"16","3":"DE5"},{"1":"bremedia produktion gmbh","2":"16","3":"DE5"},{"1":"mondelez deutschland","2":"16","3":"DE5"},{"1":"ubimax gmbh","2":"15","3":"DE5"},{"1":"bremer tageszeitungen ag","2":"15","3":"DE5"},{"1":"weserwind gmbh offshore construction georgsmarienhütte","2":"15","3":"DE5"},{"1":"klöckner desma gmbh","2":"14","3":"DE5"},{"1":"media company","2":"14","3":"DE5"},{"1":"carl büttner gmbh & co. kg","2":"14","3":"DE5"},{"1":"harren & partner","2":"14","3":"DE5"},{"1":"zeaborn gmbh & co. kg","2":"14","3":"DE5"},{"1":"bremer bereederungsges. mbh & co. kg","2":"14","3":"DE5"},{"1":"interhomes ag","2":"14","3":"DE5"},{"1":"gcp-service international","2":"14","3":"DE5"},{"1":"hochschule für künste bremen","2":"14","3":"DE5"},{"1":"wearhealth","2":"13","3":"DE5"},{"1":"beiersdorf","2":"4541","3":"DE6"},{"1":"hapag-lloyd ag","2":"2478","3":"DE6"},{"1":"lufthansa technik ag","2":"2147","3":"DE6"},{"1":"engel & völkers","2":"2041","3":"DE6"},{"1":"hamburg süd","2":"1638","3":"DE6"},{"1":"bsn medical","2":"1380","3":"DE6"},{"1":"nordex / acciona windpower","2":"1336","3":"DE6"},{"1":"otto (gmbh & co kg)","2":"1196","3":"DE6"},{"1":"jungheinrich ag","2":"1086","3":"DE6"},{"1":"montblanc","2":"941","3":"DE6"},{"1":"university of hamburg","2":"847","3":"DE6"},{"1":"germanischer lloyd","2":"710","3":"DE6"},{"1":"ece","2":"669","3":"DE6"},{"1":"edeka aktiengesellschaft","2":"588","3":"DE6"},{"1":"xing","2":"584","3":"DE6"},{"1":"evotec","2":"581","3":"DE6"},{"1":"senvion gmbh","2":"562","3":"DE6"},{"1":"berenberg","2":"561","3":"DE6"},{"1":"gfa consulting group gmbh","2":"491","3":"DE6"},{"1":"hsh nordbank","2":"480","3":"DE6"},{"1":"aurubis ag","2":"462","3":"DE6"},{"1":"olympus europe","2":"453","3":"DE6"},{"1":"desy","2":"450","3":"DE6"},{"1":"gruner + jahr gmbh & co kg","2":"433","3":"DE6"},{"1":"tom tailor group","2":"421","3":"DE6"},{"1":"hoyer group","2":"389","3":"DE6"},{"1":"oiltanking gmbh","2":"379","3":"DE6"},{"1":"eppendorf ag","2":"356","3":"DE6"},{"1":"scholz & friends","2":"354","3":"DE6"},{"1":"techniker krankenkasse","2":"354","3":"DE6"},{"1":"f.h. bertling","2":"353","3":"DE6"},{"1":"jung von matt","2":"338","3":"DE6"},{"1":"tui cruises gmbh","2":"325","3":"DE6"},{"1":"kanzlei","2":"306","3":"DE6"},{"1":"deutsche presse-agentur","2":"304","3":"DE6"},{"1":"innogames gmbh","2":"289","3":"DE6"},{"1":"publicis pixelpark","2":"288","3":"DE6"},{"1":"uke","2":"278","3":"DE6"},{"1":"hamburger sparkasse","2":"268","3":"DE6"},{"1":"dea deutsche erdoel ag","2":"261","3":"DE6"},{"1":"bauer media group","2":"251","3":"DE6"},{"1":"a. hartrodt","2":"246","3":"DE6"},{"1":"alten technology","2":"244","3":"DE6"},{"1":"hamburg university of applied sciences","2":"242","3":"DE6"},{"1":"still gmbh","2":"240","3":"DE6"},{"1":"bigpoint gmbh","2":"239","3":"DE6"},{"1":"tecis finanzdienstleistungen ag","2":"237","3":"DE6"},{"1":"sinnerschrader","2":"235","3":"DE6"},{"1":"goodgame studios","2":"232","3":"DE6"},{"1":"mytaxi - the taxi app","2":"231","3":"DE6"},{"1":"muehlhan group","2":"226","3":"DE6"},{"1":"fischerappelt","2":"216","3":"DE6"},{"1":"fms - fr. meyer's sohn","2":"208","3":"DE6"},{"1":"bdo germany","2":"196","3":"DE6"},{"1":"la prairie","2":"193","3":"DE6"},{"1":"kreditech holding ssl gmbh","2":"179","3":"DE6"},{"1":"mondial","2":"166","3":"DE6"},{"1":"freie und hansestadt hamburg","2":"158","3":"DE6"},{"1":"statista global","2":"157","3":"DE6"},{"1":"jungheinrich uk ltd","2":"155","3":"DE6"},{"1":"rieckermann","2":"154","3":"DE6"},{"1":"hansemerkur","2":"152","3":"DE6"},{"1":"prinovis ltd. & co. kg","2":"151","3":"DE6"},{"1":"spiegel online","2":"148","3":"DE6"},{"1":"about you gmbh","2":"147","3":"DE6"},{"1":"hermes germany gmbh","2":"145","3":"DE6"},{"1":"ksp","2":"142","3":"DE6"},{"1":"stulz gmbh","2":"141","3":"DE6"},{"1":"wer liefert was? gmbh","2":"140","3":"DE6"},{"1":"carnival maritime gmbh","2":"137","3":"DE6"},{"1":"albis plastic gmbh","2":"137","3":"DE6"},{"1":"hamburg port authority (hpa) anstalt öffentlichen rechts","2":"136","3":"DE6"},{"1":"mondia media group","2":"135","3":"DE6"},{"1":"minebea intec","2":"135","3":"DE6"},{"1":"hauni maschinenbau ag","2":"131","3":"DE6"},{"1":"dreamlines","2":"131","3":"DE6"},{"1":"velox","2":"130","3":"DE6"},{"1":"school of life","2":"129","3":"DE6"},{"1":"m.m.warburg & co","2":"128","3":"DE6"},{"1":"conergy ag","2":"128","3":"DE6"},{"1":"thjnk","2":"125","3":"DE6"},{"1":"cognizant solutions gmbh","2":"124","3":"DE6"},{"1":"hafencity universität hamburg","2":"119","3":"DE6"},{"1":"kolle rebbe gmbh","2":"115","3":"DE6"},{"1":"roever broenner susat mazars","2":"113","3":"DE6"},{"1":"manager magazin","2":"112","3":"DE6"},{"1":"pilot-group","2":"110","3":"DE6"},{"1":"hhla","2":"110","3":"DE6"},{"1":"schulke & mayr","2":"109","3":"DE6"},{"1":"funk","2":"108","3":"DE6"},{"1":"seca","2":"107","3":"DE6"},{"1":"rofin","2":"107","3":"DE6"},{"1":"bucerius law school","2":"106","3":"DE6"},{"1":"serrala","2":"105","3":"DE6"},{"1":"universität hamburg","2":"105","3":"DE6"},{"1":"grabarz & partner","2":"101","3":"DE6"},{"1":"p3 voith aerospace gmbh","2":"99","3":"DE6"},{"1":"aquila capital","2":"98","3":"DE6"},{"1":"deposit solutions gmbh","2":"93","3":"DE6"},{"1":"steinberg media technologies gmbh","2":"90","3":"DE6"},{"1":"deutsche bank","2":"37595","3":"DE7"},{"1":"t-systems","2":"11532","3":"DE7"},{"1":"merck group","2":"8140","3":"DE7"},{"1":"lufthansa","2":"6505","3":"DE7"},{"1":"fresenius kabi","2":"4629","3":"DE7"},{"1":"merck serono","2":"3056","3":"DE7"},{"1":"b. braun group","2":"2645","3":"DE7"},{"1":"software ag","2":"2592","3":"DE7"},{"1":"lsg sky chefs","2":"2351","3":"DE7"},{"1":"allianz global investors","2":"2016","3":"DE7"},{"1":"european central bank","2":"1995","3":"DE7"},{"1":"merck kgaa, darmstadt, germany","2":"1740","3":"DE7"},{"1":"my company","2":"1441","3":"DE7"},{"1":"heraeus","2":"1371","3":"DE7"},{"1":"leica microsystems","2":"1222","3":"DE7"},{"1":"lufthansa cargo","2":"1196","3":"DE7"},{"1":"procredit bank","2":"1134","3":"DE7"},{"1":"fresenius medical care","2":"991","3":"DE7"},{"1":"dvag","2":"991","3":"DE7"},{"1":"pwc deutschland","2":"963","3":"DE7"},{"1":"kfw","2":"951","3":"DE7"},{"1":"deutsche börse","2":"913","3":"DE7"},{"1":"r+v versicherung","2":"875","3":"DE7"},{"1":"fraport ag","2":"869","3":"DE7"},{"1":"vibracoustic","2":"841","3":"DE7"},{"1":"wintershall","2":"807","3":"DE7"},{"1":"edag","2":"790","3":"DE7"},{"1":"norma group","2":"786","3":"DE7"},{"1":"lufthansa systems","2":"783","3":"DE7"},{"1":"merz pharma","2":"708","3":"DE7"},{"1":"döhlergroup","2":"657","3":"DE7"},{"1":"bosch service solutions","2":"642","3":"DE7"},{"1":"tcs","2":"631","3":"DE7"},{"1":"abcd","2":"630","3":"DE7"},{"1":"deutsche bundesbank","2":"550","3":"DE7"},{"1":"dekabank deutsche girozentrale","2":"548","3":"DE7"},{"1":"technische universität darmstadt","2":"547","3":"DE7"},{"1":"the same","2":"532","3":"DE7"},{"1":"fresenius kabi","2":"526","3":"DE7"},{"1":"dfs deutsche flugsicherung gmbh","2":"508","3":"DE7"},{"1":"sma solar technology ag","2":"500","3":"DE7"},{"1":"chemetall","2":"493","3":"DE7"},{"1":"justus liebig universität gießen","2":"487","3":"DE7"},{"1":"messe frankfurt gmbh","2":"483","3":"DE7"},{"1":"db systel gmbh","2":"450","3":"DE7"},{"1":"stada","2":"449","3":"DE7"},{"1":"philipps-universität marburg","2":"444","3":"DE7"},{"1":"frankfurt school of finance & management","2":"443","3":"DE7"},{"1":"condor flugdienst gmbh","2":"443","3":"DE7"},{"1":"airplus international","2":"441","3":"DE7"},{"1":"ing-diba","2":"438","3":"DE7"},{"1":"hessischer rundfunk","2":"411","3":"DE7"},{"1":"schenck process","2":"393","3":"DE7"},{"1":"deutsche vermögensberatung ag","2":"390","3":"DE7"},{"1":"union investment","2":"386","3":"DE7"},{"1":"cws-boco","2":"384","3":"DE7"},{"1":"merck serono","2":"377","3":"DE7"},{"1":"crytek","2":"373","3":"DE7"},{"1":"iquest group","2":"367","3":"DE7"},{"1":"osd","2":"352","3":"DE7"},{"1":"eumetsat","2":"347","3":"DE7"},{"1":"bmo","2":"343","3":"DE7"},{"1":"brita group","2":"341","3":"DE7"},{"1":"accenture dach","2":"322","3":"DE7"},{"1":"hochschule fresenius university of applied sciences","2":"321","3":"DE7"},{"1":"ineos styrolution","2":"300","3":"DE7"},{"1":"m.i.t e-solutions gmbh","2":"290","3":"DE7"},{"1":"merck life science","2":"274","3":"DE7"},{"1":"techem energy services gmbh","2":"271","3":"DE7"},{"1":"aupairworld","2":"269","3":"DE7"},{"1":"lsg sky chefs","2":"269","3":"DE7"},{"1":"dvb bank se","2":"268","3":"DE7"},{"1":"lahmeyer international","2":"267","3":"DE7"},{"1":"commerz systems gmbh","2":"253","3":"DE7"},{"1":"finanz informatik gmbh & co kg","2":"246","3":"DE7"},{"1":"bosch service solutions","2":"243","3":"DE7"},{"1":"internationaler bund (ib)","2":"243","3":"DE7"},{"1":"goodyear dunlop tires germany gmbh","2":"243","3":"DE7"},{"1":"pfeiffer vacuum","2":"238","3":"DE7"},{"1":"berlitz deutschland gmbh","2":"237","3":"DE7"},{"1":"lhs","2":"237","3":"DE7"},{"1":"airbridgecargo airlines llc","2":"237","3":"DE7"},{"1":"randstad deutschland","2":"229","3":"DE7"},{"1":"leica camera ag","2":"227","3":"DE7"},{"1":"sva system vertrieb alexander gmbh","2":"226","3":"DE7"},{"1":"eleve","2":"224","3":"DE7"},{"1":"d-fine gmbh","2":"222","3":"DE7"},{"1":"syzygy","2":"219","3":"DE7"},{"1":"steigenberger hotels ag","2":"217","3":"DE7"},{"1":"almatis","2":"215","3":"DE7"},{"1":"miebach consulting","2":"213","3":"DE7"},{"1":"messer group","2":"212","3":"DE7"},{"1":"bosch thermotechnik gmbh","2":"212","3":"DE7"},{"1":"frankfurt university of applied sciences","2":"212","3":"DE7"},{"1":"frankfurter allgemeine zeitung","2":"211","3":"DE7"},{"1":"rittal gmbh & co. kg","2":"211","3":"DE7"},{"1":"robert bosch venture capital gmbh (rbvc)","2":"210","3":"DE7"},{"1":"mewa textil-management","2":"202","3":"DE7"},{"1":"cbm international","2":"199","3":"DE7"},{"1":"messer cutting systems","2":"188","3":"DE7"},{"1":"university of rostock","2":"493","3":"DE8"},{"1":"centogene ag","2":"107","3":"DE8"},{"1":"i:fao","2":"92","3":"DE8"},{"1":"bps (suisse)","2":"78","3":"DE8"},{"1":"zumkowski trading ltd","2":"57","3":"DE8"},{"1":"gkm","2":"55","3":"DE8"},{"1":"hochschule wismar - fakultät für wirtschaftswissenschaften","2":"47","3":"DE8"},{"1":"nordic yards","2":"46","3":"DE8"},{"1":"siv.ag","2":"45","3":"DE8"},{"1":"alltec gmbh (foba laser marking + engraving)","2":"45","3":"DE8"},{"1":"axiros","2":"38","3":"DE8"},{"1":"xoxo","2":"32","3":"DE8"},{"1":"cheplapharm arzneimittel gmbh","2":"26","3":"DE8"},{"1":"liebherr maritime cranes","2":"26","3":"DE8"},{"1":"alltec","2":"26","3":"DE8"},{"1":"a-rosa river cruises","2":"25","3":"DE8"},{"1":"yale school of medicine","2":"25","3":"DE8"},{"1":"leibniz institute for plasma science and technology (inp greifswald) e.v.","2":"25","3":"DE8"},{"1":"neue warnow design&technology gmbh","2":"23","3":"DE8"},{"1":"dvz datenverarbeitungszentrum mecklenburg-vorpommern gmbh","2":"22","3":"DE8"},{"1":"aam it gmbh","2":"22","3":"DE8"},{"1":"hanseyachts ag","2":"22","3":"DE8"},{"1":"debeka versicherungen bausparkasse","2":"19","3":"DE8"},{"1":"spheros europa gmbh","2":"18","3":"DE8"},{"1":"ocean insights","2":"17","3":"DE8"},{"1":"optimal media production gmbh","2":"16","3":"DE8"},{"1":"neptun ship design","2":"16","3":"DE8"},{"1":"wiro","2":"15","3":"DE8"},{"1":"arbeitslosenverband deutschland e.v.","2":"15","3":"DE8"},{"1":"mecklenburgisches staatstheater schwerin ggmbh","2":"14","3":"DE8"},{"1":"mandarin medien","2":"13","3":"DE8"},{"1":"wemag ag","2":"13","3":"DE8"},{"1":"volkstheater rostock gmbh","2":"13","3":"DE8"},{"1":"emh metering gmbh & co kg","2":"13","3":"DE8"},{"1":"wings wismar international graduation services gmbh","2":"13","3":"DE8"},{"1":"windparkservice gmbh","2":"12","3":"DE8"},{"1":"klöpferholz gmbh & co. kg","2":"12","3":"DE8"},{"1":"scandlines deutschland gmbh","2":"12","3":"DE8"},{"1":"ilim timber bavaria gmbh","2":"12","3":"DE8"},{"1":"keramik","2":"12","3":"DE8"},{"1":"xoxo ltd","2":"12","3":"DE8"},{"1":"jackon gmbh","2":"12","3":"DE8"},{"1":"tourismusverband mecklenburg-vorpommern e.v.","2":"11","3":"DE8"},{"1":"trebing & himstedt prozeßautomation gmbh & co. kg","2":"11","3":"DE8"},{"1":"grone bildungszentrum für gesundheits- und sozialberufe gmbh","2":"11","3":"DE8"},{"1":"hochschule für musik und theater rostock","2":"11","3":"DE8"},{"1":"airsense analytics gmbh","2":"11","3":"DE8"},{"1":"rst rostock system-technik gmbh","2":"10","3":"DE8"},{"1":"sundair","2":"10","3":"DE8"},{"1":"wkda holding gmbh","2":"9","3":"DE8"},{"1":"tws tankcontainer-leasing gmbh & co. kg","2":"9","3":"DE8"},{"1":"ift institut für talententwicklung gmbh","2":"9","3":"DE8"},{"1":"heinrich böll stiftung","2":"9","3":"DE8"},{"1":"raden","2":"9","3":"DE8"},{"1":"ostseesparkasse rostock","2":"9","3":"DE8"},{"1":"sear gmbh","2":"8","3":"DE8"},{"1":"mmg - mecklenburger metallguss gmbh","2":"8","3":"DE8"},{"1":"eno","2":"8","3":"DE8"},{"1":"garten landschaftsbau","2":"8","3":"DE8"},{"1":"kaufmännische berufsschule","2":"8","3":"DE8"},{"1":"martin membrane systems ag","2":"8","3":"DE8"},{"1":"förderschule mit dem förderschwerpunkt geistige entwicklung schule an der bleiche","2":"8","3":"DE8"},{"1":"seehafen wismar gmbh","2":"8","3":"DE8"},{"1":"berufliche schule","2":"7","3":"DE8"},{"1":"klinikum südstadt rostock","2":"7","3":"DE8"},{"1":"rechtsanwatskanzlei","2":"7","3":"DE8"},{"1":"sonderpädagogisches förderzentrum","2":"7","3":"DE8"},{"1":"albert-schweitzer-gymnasium","2":"7","3":"DE8"},{"1":"infront germany gmbh","2":"7","3":"DE8"},{"1":"data experts gmbh","2":"7","3":"DE8"},{"1":"straßen- und tiefbau","2":"7","3":"DE8"},{"1":"fleetmon.com","2":"7","3":"DE8"},{"1":"advocado","2":"7","3":"DE8"},{"1":"neptun werft gmbh","2":"6","3":"DE8"},{"1":"1a-handelsagentur","2":"6","3":"DE8"},{"1":"sabik offshore a carmanah company","2":"6","3":"DE8"},{"1":"rono maschinenbau gmbh","2":"6","3":"DE8"},{"1":"e.no","2":"6","3":"DE8"},{"1":"mts perforator gmbh","2":"6","3":"DE8"},{"1":"europäische fachhochschule eufh med","2":"6","3":"DE8"},{"1":"aquality international","2":"6","3":"DE8"},{"1":"d.b.s. s.r.l.","2":"6","3":"DE8"},{"1":"sea level","2":"6","3":"DE8"},{"1":"kervita betriebs gmbh","2":"6","3":"DE8"},{"1":"ihk zu rostock","2":"6","3":"DE8"},{"1":"cerascreen","2":"6","3":"DE8"},{"1":"video games uncovered (vgu)","2":"5","3":"DE8"},{"1":"sws | consulting","2":"5","3":"DE8"},{"1":"hepster","2":"5","3":"DE8"},{"1":"se.gi real estate","2":"5","3":"DE8"},{"1":"clausohm-software gmbh","2":"5","3":"DE8"},{"1":"seetel hotels usedom","2":"5","3":"DE8"},{"1":"anklam extrakt gmbh","2":"5","3":"DE8"},{"1":"wiro wohnen in rostock wohnungsgesellschaft mbh","2":"5","3":"DE8"},{"1":"dst diagnostische systeme & technologien gmbh","2":"5","3":"DE8"},{"1":"vorpommersche landesbühne gmbh","2":"5","3":"DE8"},{"1":"helios hanseklinikum stralsund gmbh","2":"5","3":"DE8"},{"1":"pc spezialist","2":"5","3":"DE8"},{"1":"innocademy®","2":"5","3":"DE8"},{"1":"kranken- und altenpflege","2":"5","3":"DE8"},{"1":"volkswagen ag","2":"8603","3":"DE9"},{"1":"tui","2":"6005","3":"DE9"},{"1":"symrise","2":"2030","3":"DE9"},{"1":"volkswagen financial services","2":"1795","3":"DE9"},{"1":"hannover re","2":"893","3":"DE9"},{"1":"enercon gmbh","2":"892","3":"DE9"},{"1":"ottobock healthcare","2":"767","3":"DE9"},{"1":"tüv nord group","2":"663","3":"DE9"},{"1":"leibniz universität hannover, germany","2":"644","3":"DE9"},{"1":"tu braunschweig","2":"632","3":"DE9"},{"1":"sennheiser","2":"623","3":"DE9"},{"1":"e.on business services","2":"580","3":"DE9"},{"1":"kws group","2":"524","3":"DE9"},{"1":"hdi global se","2":"474","3":"DE9"},{"1":"kkh","2":"421","3":"DE9"},{"1":"georg-august-universität göttingen","2":"361","3":"DE9"},{"1":"nord/lb","2":"343","3":"DE9"},{"1":"aventics","2":"340","3":"DE9"},{"1":"konica minolta business solutions europe gmbh","2":"334","3":"DE9"},{"1":"universitätsmedizin göttingen","2":"286","3":"DE9"},{"1":"wipak","2":"259","3":"DE9"},{"1":"cewe stiftung & co. kgaa","2":"258","3":"DE9"},{"1":"carl von ossietzky university of oldenburg","2":"254","3":"DE9"},{"1":"btc - business technology consulting ag","2":"254","3":"DE9"},{"1":"mtu maintenance","2":"239","3":"DE9"},{"1":"autovision gmbh (ein unternehmen im volkswagen konzern)","2":"237","3":"DE9"},{"1":"bahlsen","2":"211","3":"DE9"},{"1":"deutsche messe ag","2":"204","3":"DE9"},{"1":"ricoh germany","2":"200","3":"DE9"},{"1":"physikalisch-technische bundesanstalt, ptb","2":"198","3":"DE9"},{"1":"dynapac","2":"192","3":"DE9"},{"1":"ebs limited","2":"190","3":"DE9"},{"1":"konica minolta business solutions deutschland gmbh","2":"185","3":"DE9"},{"1":"werum it solutions","2":"173","3":"DE9"},{"1":"forbo movement systems","2":"171","3":"DE9"},{"1":"university of osnabrueck","2":"167","3":"DE9"},{"1":"talanx , hannover","2":"164","3":"DE9"},{"1":"scania industrial maintenance ab","2":"160","3":"DE9"},{"1":"angelas masche","2":"160","3":"DE9"},{"1":"bbc chartering","2":"155","3":"DE9"},{"1":"sycor","2":"155","3":"DE9"},{"1":"kvhs","2":"152","3":"DE9"},{"1":"dbe","2":"151","3":"DE9"},{"1":"meyer werft papenburg","2":"144","3":"DE9"},{"1":"ewe tel gmbh","2":"141","3":"DE9"},{"1":"bildung","2":"141","3":"DE9"},{"1":"dmk deutsches milchkontor gmbh","2":"136","3":"DE9"},{"1":"hdi sigorta a.s.","2":"131","3":"DE9"},{"1":"sumitomo electric bordnetze se","2":"129","3":"DE9"},{"1":"kek","2":"129","3":"DE9"},{"1":"airobotics","2":"121","3":"DE9"},{"1":"mast-jägermeister se","2":"121","3":"DE9"},{"1":"salzgitter ag","2":"118","3":"DE9"},{"1":"universität hildesheim","2":"118","3":"DE9"},{"1":"vhv versicherungen","2":"114","3":"DE9"},{"1":"heise medien gmbh & co. kg","2":"111","3":"DE9"},{"1":"landeshauptstadt hannover","2":"111","3":"DE9"},{"1":"mobile.de gmbh","2":"105","3":"DE9"},{"1":"dtb","2":"105","3":"DE9"},{"1":"gom - optical measuring techniques","2":"105","3":"DE9"},{"1":"nordzucker ag","2":"103","3":"DE9"},{"1":"santa lucia","2":"101","3":"DE9"},{"1":"volkswagen group services gmbh","2":"101","3":"DE9"},{"1":"focke & co","2":"101","3":"DE9"},{"1":"h&d international group","2":"100","3":"DE9"},{"1":"dedon","2":"99","3":"DE9"},{"1":"grimme","2":"99","3":"DE9"},{"1":"industriegewerkschaft bergbau, chemie, energie (ig bce)","2":"98","3":"DE9"},{"1":"swiss life select deutschland","2":"96","3":"DE9"},{"1":"lpkf laser & electronics ag","2":"95","3":"DE9"},{"1":"bentec gmbh drilling & oilfield systems","2":"94","3":"DE9"},{"1":"felix schoeller group","2":"94","3":"DE9"},{"1":"cbr fashion group","2":"92","3":"DE9"},{"1":"budnik","2":"90","3":"DE9"},{"1":"keymile","2":"88","3":"DE9"},{"1":"offis - institute for information technology","2":"84","3":"DE9"},{"1":"c&s","2":"83","3":"DE9"},{"1":"ibb institut für berufliche bildung ag","2":"83","3":"DE9"},{"1":"stadtwerke hannover ag","2":"83","3":"DE9"},{"1":"hdi-gerling industrie versicherung ag","2":"83","3":"DE9"},{"1":"nsb niederelbe schiffahrtsgesellschaft mbh & co. kg","2":"82","3":"DE9"},{"1":"inpro electric","2":"80","3":"DE9"},{"1":"dunlop oil & marine ltd.","2":"78","3":"DE9"},{"1":"fahrzeugwerk bernard krone gmbh","2":"78","3":"DE9"},{"1":"volkswagen finance china co., ltd. & volkswagen new mobility service co., ltd.","2":"76","3":"DE9"},{"1":"stiebel eltron gmbh & co. kg","2":"76","3":"DE9"},{"1":"kks","2":"76","3":"DE9"},{"1":"iberotel","2":"72","3":"DE9"},{"1":"madsack mediengruppe","2":"71","3":"DE9"},{"1":"autostadt gmbh","2":"70","3":"DE9"},{"1":"seat sport","2":"70","3":"DE9"},{"1":"benecke-kaliko ag","2":"69","3":"DE9"},{"1":"schnellecke logistics ag & co. kg","2":"69","3":"DE9"},{"1":"hy-line international","2":"68","3":"DE9"},{"1":"bauking ag","2":"65","3":"DE9"},{"1":"saturn petcare","2":"65","3":"DE9"},{"1":"deutsche hypothekenbank (actien-gesellschaft)","2":"65","3":"DE9"},{"1":"oldenburgische landesbank ag","2":"64","3":"DE9"},{"1":"orgadata ag","2":"64","3":"DE9"},{"1":".dat","2":"64","3":"DE9"},{"1":"dhl","2":"42501","3":"DEA"},{"1":"bayer","2":"17592","3":"DEA"},{"1":"db schenker","2":"12210","3":"DEA"},{"1":"henkel","2":"11222","3":"DEA"},{"1":"dhl supply chain","2":"9617","3":"DEA"},{"1":"c&a","2":"8800","3":"DEA"},{"1":"bayer cropscience","2":"8034","3":"DEA"},{"1":"thyssenkrupp","2":"7572","3":"DEA"},{"1":"e.on","2":"7079","3":"DEA"},{"1":"deutsche telekom","2":"6316","3":"DEA"},{"1":"bayer materialscience","2":"5182","3":"DEA"},{"1":"hella","2":"4962","3":"DEA"},{"1":"lanxess","2":"2737","3":"DEA"},{"1":"deutsche post","2":"2627","3":"DEA"},{"1":"private sector","2":"2360","3":"DEA"},{"1":"qiagen","2":"2174","3":"DEA"},{"1":"vorwerk group","2":"2113","3":"DEA"},{"1":"brenntag","2":"2089","3":"DEA"},{"1":"sqs group","2":"2024","3":"DEA"},{"1":"esprit","2":"1836","3":"DEA"},{"1":"rwth aachen university","2":"1753","3":"DEA"},{"1":"lr health & beauty systems gmbh","2":"1741","3":"DEA"},{"1":"bayer business services","2":"1599","3":"DEA"},{"1":"dlr","2":"1539","3":"DEA"},{"1":"innogy se","2":"1511","3":"DEA"},{"1":"ergo versicherungsgruppe ag","2":"1511","3":"DEA"},{"1":"ford-werke gmbh","2":"1464","3":"DEA"},{"1":"rhenus logistics","2":"1425","3":"DEA"},{"1":"rewe group","2":"1404","3":"DEA"},{"1":"tüv rheinland ag","2":"1393","3":"DEA"},{"1":"kostal group","2":"1363","3":"DEA"},{"1":"phoenix contact","2":"1357","3":"DEA"},{"1":"university of cologne","2":"1292","3":"DEA"},{"1":"grünenthal group","2":"1267","3":"DEA"},{"1":"itelligence","2":"1149","3":"DEA"},{"1":"claas","2":"1112","3":"DEA"},{"1":"beumer group","2":"1086","3":"DEA"},{"1":"deutsche welle","2":"1053","3":"DEA"},{"1":"p3 group","2":"971","3":"DEA"},{"1":"kautex textron","2":"955","3":"DEA"},{"1":"mubea","2":"949","3":"DEA"},{"1":"trivago","2":"945","3":"DEA"},{"1":"asd","2":"879","3":"DEA"},{"1":"simon-kucher & partners","2":"865","3":"DEA"},{"1":"forschungszentrum jülich","2":"851","3":"DEA"},{"1":"grünenthal","2":"840","3":"DEA"},{"1":"university of muenster","2":"824","3":"DEA"},{"1":"rheinmetall denel munition","2":"816","3":"DEA"},{"1":"ferchau engineering","2":"784","3":"DEA"},{"1":"pfa","2":"760","3":"DEA"},{"1":"bertelsmann","2":"745","3":"DEA"},{"1":"fläkt woods group","2":"745","3":"DEA"},{"1":"hochtief","2":"737","3":"DEA"},{"1":"wdr","2":"729","3":"DEA"},{"1":"gerresheimer","2":"664","3":"DEA"},{"1":"schüco international kg","2":"651","3":"DEA"},{"1":"arvato scm solutions","2":"651","3":"DEA"},{"1":"hornbach baumarkt ag","2":"636","3":"DEA"},{"1":"welthungerhilfe","2":"605","3":"DEA"},{"1":"miltenyi biotec","2":"594","3":"DEA"},{"1":"krohne group","2":"594","3":"DEA"},{"1":"formel d group","2":"576","3":"DEA"},{"1":"parfümerie douglas","2":"572","3":"DEA"},{"1":"metro ag","2":"564","3":"DEA"},{"1":"arag","2":"560","3":"DEA"},{"1":"hrs - the hotel portal","2":"551","3":"DEA"},{"1":"rwe supply & trading gmbh","2":"550","3":"DEA"},{"1":"netcologne","2":"548","3":"DEA"},{"1":"detecon international gmbh","2":"540","3":"DEA"},{"1":"targobank","2":"520","3":"DEA"},{"1":"access","2":"510","3":"DEA"},{"1":"ifm electronic gmbh","2":"508","3":"DEA"},{"1":"united nations volunteers","2":"503","3":"DEA"},{"1":"unitymedia","2":"498","3":"DEA"},{"1":"beckhoff automation","2":"480","3":"DEA"},{"1":"scheidt & bachmann","2":"466","3":"DEA"},{"1":"easa - european aviation safety agency","2":"466","3":"DEA"},{"1":"beeline group (fashion accessories)","2":"466","3":"DEA"},{"1":"rechtsanwaltskanzlei","2":"462","3":"DEA"},{"1":"aldi süd","2":"457","3":"DEA"},{"1":"land nrw","2":"452","3":"DEA"},{"1":"gothaer","2":"450","3":"DEA"},{"1":"zeb consulting","2":"444","3":"DEA"},{"1":"mauser","2":"438","3":"DEA"},{"1":"same","2":"426","3":"DEA"},{"1":"ista","2":"425","3":"DEA"},{"1":"getrag ford transmissions","2":"407","3":"DEA"},{"1":"adesso ag","2":"405","3":"DEA"},{"1":"daad german academic exchange service","2":"400","3":"DEA"},{"1":"behr-hella thermocontrol (bhtc)","2":"395","3":"DEA"},{"1":"kelvion","2":"377","3":"DEA"},{"1":"university of paderborn","2":"375","3":"DEA"},{"1":"xella group","2":"349","3":"DEA"},{"1":"hp pelzer, north america","2":"342","3":"DEA"},{"1":"esl - turtle entertainment","2":"338","3":"DEA"},{"1":"ifb","2":"337","3":"DEA"},{"1":"hettich group","2":"336","3":"DEA"},{"1":"rle international group","2":"333","3":"DEA"},{"1":"tmd friction","2":"327","3":"DEA"},{"1":"unfccc","2":"319","3":"DEA"},{"1":"basf","2":"29673","3":"DEB"},{"1":"boehringer ingelheim","2":"19989","3":"DEB"},{"1":"ksb company","2":"1504","3":"DEB"},{"1":"schott","2":"1276","3":"DEB"},{"1":"zdf","2":"1073","3":"DEB"},{"1":"1&1 internet ag","2":"893","3":"DEB"},{"1":"johannes gutenberg-universität mainz","2":"743","3":"DEB"},{"1":"jf hillebrand global beverage logistics","2":"705","3":"DEB"},{"1":"db cargo ag","2":"376","3":"DEB"},{"1":"stabilus","2":"328","3":"DEB"},{"1":"basf petronas chemicals sdn. bhd.","2":"325","3":"DEB"},{"1":"lohmann & rauscher","2":"307","3":"DEB"},{"1":"deg","2":"276","3":"DEB"},{"1":"whu - otto beisheim school of management","2":"242","3":"DEB"},{"1":"keiper","2":"206","3":"DEB"},{"1":"debeka","2":"196","3":"DEB"},{"1":"wirtgen group","2":"183","3":"DEB"},{"1":"lohmann gmbh & co. kg","2":"171","3":"DEB"},{"1":"bomag gmbh","2":"154","3":"DEB"},{"1":"she","2":"142","3":"DEB"},{"1":"rkw se","2":"132","3":"DEB"},{"1":"max planck institute for polymer research","2":"123","3":"DEB"},{"1":"pm-international ag","2":"113","3":"DEB"},{"1":"pfw aerospace gmbh","2":"112","3":"DEB"},{"1":"chemische fabrik budenheim","2":"112","3":"DEB"},{"1":"max planck institute for psycholinguistics","2":"107","3":"DEB"},{"1":"shd","2":"101","3":"DEB"},{"1":"stadt köln","2":"100","3":"DEB"},{"1":"canyon bicycles gmbh","2":"96","3":"DEB"},{"1":"proalpha","2":"95","3":"DEB"},{"1":"biontech ag","2":"93","3":"DEB"},{"1":"gip","2":"90","3":"DEB"},{"1":"schottel","2":"87","3":"DEB"},{"1":"ibis styles","2":"84","3":"DEB"},{"1":"htt","2":"83","3":"DEB"},{"1":"academy cube - bildung und forschung für die digitale zukunft","2":"79","3":"DEB"},{"1":"fraunhofer itwm","2":"78","3":"DEB"},{"1":"midas pharma","2":"71","3":"DEB"},{"1":"pfisterer kontaktsysteme gmbh","2":"69","3":"DEB"},{"1":"itk","2":"67","3":"DEB"},{"1":"geutebruck gmbh","2":"67","3":"DEB"},{"1":"gastronomie geflüster","2":"66","3":"DEB"},{"1":"juwi holding ag","2":"65","3":"DEB"},{"1":"gebr. pfeiffer se","2":"64","3":"DEB"},{"1":"heuft systemtechnik gmbh","2":"62","3":"DEB"},{"1":"techn. university of kaiserslautern / tu","2":"62","3":"DEB"},{"1":"saitow ag","2":"62","3":"DEB"},{"1":"axit - a siemens company","2":"62","3":"DEB"},{"1":"parts europe","2":"61","3":"DEB"},{"1":"university of koblenz-landau","2":"59","3":"DEB"},{"1":"malteser hilfsdienst gemeinnützige gmbh","2":"56","3":"DEB"},{"1":"btc europe","2":"55","3":"DEB"},{"1":"vecoplan ag","2":"54","3":"DEB"},{"1":"elastomer solutions group","2":"52","3":"DEB"},{"1":"empolis information management gmbh","2":"50","3":"DEB"},{"1":"bd rowa germany gmbh","2":"49","3":"DEB"},{"1":"wirtgen china","2":"48","3":"DEB"},{"1":"technische universität kaiserslautern","2":"47","3":"DEB"},{"1":"bfe studio und medien systeme gmbh","2":"46","3":"DEB"},{"1":"ansorg gmbh","2":"45","3":"DEB"},{"1":"hochwald foods gmbh","2":"44","3":"DEB"},{"1":"hochschule worms","2":"44","3":"DEB"},{"1":"kfz handel","2":"43","3":"DEB"},{"1":"debeka krankenversicherungsverein a.g.","2":"43","3":"DEB"},{"1":"hochschule koblenz (koblenz university of applied sciences)","2":"42","3":"DEB"},{"1":"griesson - de beukelaer gmbh & co. kg","2":"42","3":"DEB"},{"1":"mainz university of applied sciences","2":"42","3":"DEB"},{"1":"wolfcraft","2":"42","3":"DEB"},{"1":"fraunhofer iese (institute for experimental software engineering)","2":"42","3":"DEB"},{"1":"dr. fischer europe","2":"42","3":"DEB"},{"1":"wipotec-ocs","2":"41","3":"DEB"},{"1":"verlagsgruppe rhein main gmbh & co. kg","2":"41","3":"DEB"},{"1":"polizeidirektion","2":"41","3":"DEB"},{"1":"institute of molecular biology (imb)","2":"40","3":"DEB"},{"1":"luxspace sarl","2":"40","3":"DEB"},{"1":"max-planck-institut für chemie","2":"39","3":"DEB"},{"1":"inp deutschland gmbh","2":"39","3":"DEB"},{"1":"zdf digital medienproduktion gmbh","2":"39","3":"DEB"},{"1":"klinikum der stadt ludwigshafen am rhein ggmbh","2":"39","3":"DEB"},{"1":"treif maschinenbau gmbh","2":"38","3":"DEB"},{"1":"itac software ag","2":"38","3":"DEB"},{"1":"kobil systems","2":"38","3":"DEB"},{"1":"textbroker eu","2":"38","3":"DEB"},{"1":"mediaman //","2":"38","3":"DEB"},{"1":"textbroker españa","2":"36","3":"DEB"},{"1":"compugroup software gmbh","2":"36","3":"DEB"},{"1":"schott music gmbh & co. kg","2":"36","3":"DEB"},{"1":"dbk group","2":"35","3":"DEB"},{"1":"textbroker nederland","2":"34","3":"DEB"},{"1":"drahtzug stein holding","2":"34","3":"DEB"},{"1":"bito-lagertechnik bittmann gmbh","2":"34","3":"DEB"},{"1":"falk&ross","2":"34","3":"DEB"},{"1":"diakonisches werk","2":"34","3":"DEB"},{"1":"academy of european law (era)","2":"34","3":"DEB"},{"1":"kob karl otto braun gmbh & co. kg","2":"34","3":"DEB"},{"1":"renolit","2":"33","3":"DEB"},{"1":"wipotec gmbh","2":"33","3":"DEB"},{"1":"wipotec-ocs","2":"33","3":"DEB"},{"1":"university of koblenz-landau (campus koblenz)","2":"33","3":"DEB"},{"1":"framas indonesia","2":"32","3":"DEB"},{"1":"hager group","2":"1703","3":"DEC"},{"1":"villeroy & boch","2":"716","3":"DEC"},{"1":"praktiker","2":"478","3":"DEC"},{"1":"ids scheer","2":"241","3":"DEC"},{"1":"deutsches forschungszentrum für künstliche intelligenz (dfki)","2":"238","3":"DEC"},{"1":"omniscriptum publishing group","2":"111","3":"DEC"},{"1":"scheer gmbh","2":"108","3":"DEC"},{"1":"max planck institute for informatics","2":"96","3":"DEC"},{"1":"villeroy & boch gustavsberg ab","2":"96","3":"DEC"},{"1":"orbis ag","2":"83","3":"DEC"},{"1":"ind","2":"71","3":"DEC"},{"1":"bocchiotti s.p.a.","2":"65","3":"DEC"},{"1":"ktp","2":"61","3":"DEC"},{"1":"becker mining systems","2":"53","3":"DEC"},{"1":"cosmosdirekt","2":"49","3":"DEC"},{"1":"ursapharm arzneimittel gmbh","2":"40","3":"DEC"},{"1":"gms global media services gmbh","2":"39","3":"DEC"},{"1":"buhl data service gmbh","2":"37","3":"DEC"},{"1":"crewlink ireland limited","2":"37","3":"DEC"},{"1":"ergosign gmbh","2":"34","3":"DEC"},{"1":"brück®","2":"34","3":"DEC"},{"1":"fraunhofer izfp","2":"31","3":"DEC"},{"1":"schülerhilfe","2":"30","3":"DEC"},{"1":"vensys energy ag","2":"28","3":"DEC"},{"1":"adler vertriebs gmbh & co. werbegeschenke kg","2":"28","3":"DEC"},{"1":"klinikum saarbrücken","2":"24","3":"DEC"},{"1":"kd pharma","2":"23","3":"DEC"},{"1":"data one gmbh","2":"23","3":"DEC"},{"1":"prego services gmbh","2":"22","3":"DEC"},{"1":"phast gmbh","2":"22","3":"DEC"},{"1":"pikon","2":"22","3":"DEC"},{"1":"juris gmbh","2":"22","3":"DEC"},{"1":"herweck ag","2":"21","3":"DEC"},{"1":"retailsolutions","2":"21","3":"DEC"},{"1":"fixemer logistics gmbh","2":"20","3":"DEC"},{"1":"landeshauptstadt saarbrücken","2":"19","3":"DEC"},{"1":"axxcon - interim | consulting | advisory","2":"18","3":"DEC"},{"1":"kist europe","2":"18","3":"DEC"},{"1":"awo saarland","2":"17","3":"DEC"},{"1":"x-aitment gmbh","2":"17","3":"DEC"},{"1":"ikk südwest","2":"17","3":"DEC"},{"1":"gubse ag","2":"17","3":"DEC"},{"1":"sgs-tüv saar gmbh","2":"16","3":"DEC"},{"1":"greencells group","2":"14","3":"DEC"},{"1":"avarteq gmbh","2":"14","3":"DEC"},{"1":"marienhaus dienstleistungen gmbh","2":"14","3":"DEC"},{"1":"kohlpharma gmbh","2":"14","3":"DEC"},{"1":"m&r kreativ","2":"14","3":"DEC"},{"1":"hexonet","2":"13","3":"DEC"},{"1":"eurice - european research and project office gmbh","2":"13","3":"DEC"},{"1":"amphenol-air lb gmbh","2":"13","3":"DEC"},{"1":"semvox gmbh","2":"13","3":"DEC"},{"1":"antz","2":"13","3":"DEC"},{"1":"baugruppe peter gross","2":"13","3":"DEC"},{"1":"dhc business solutions gmbh & co. kg","2":"12","3":"DEC"},{"1":"saarschmiede gmbh freiformschmiede","2":"12","3":"DEC"},{"1":"centigrade gmbh","2":"12","3":"DEC"},{"1":"mha zentgraf gmbh & co. kg","2":"12","3":"DEC"},{"1":"retailsolutions ag","2":"12","3":"DEC"},{"1":"inexio informationstechnologie und telekommunikation kgaa","2":"11","3":"DEC"},{"1":"steag new energies gmbh","2":"11","3":"DEC"},{"1":"contact air technik gmbh","2":"11","3":"DEC"},{"1":"medtron ag","2":"11","3":"DEC"},{"1":"labor cotral gmbh","2":"10","3":"DEC"},{"1":"zürich versicherungen","2":"10","3":"DEC"},{"1":"netmedianer gmbh","2":"10","3":"DEC"},{"1":"schloss dagstuhl","2":"10","3":"DEC"},{"1":"vse net gmbh","2":"10","3":"DEC"},{"1":"karlsberg brauerei gmbh","2":"10","3":"DEC"},{"1":"pluscard service-gesellschaft für kreditkarten-processing mbh","2":"10","3":"DEC"},{"1":"center for it-security, privacy and accountability (cispa)","2":"10","3":"DEC"},{"1":"stage6 (scooter attack)","2":"9","3":"DEC"},{"1":"cluster of excellence mmci, saarland university","2":"9","3":"DEC"},{"1":"tcpos gmbh","2":"9","3":"DEC"},{"1":"dhc dr. herterich & consultants gmbh","2":"9","3":"DEC"},{"1":"nestlé wagner gmbh","2":"9","3":"DEC"},{"1":"globus fachmärkte gmbh & co. kg","2":"9","3":"DEC"},{"1":"bähr & fess forecasts gmbh","2":"9","3":"DEC"},{"1":"viasit bürositzmöbel gmbh","2":"9","3":"DEC"},{"1":"marienhaus klinikum saarlouis - dillingen","2":"8","3":"DEC"},{"1":"ktp kunststoff palettentechnik gmbh","2":"8","3":"DEC"},{"1":"aws institut für digitale produkte und prozesse ggmbh","2":"8","3":"DEC"},{"1":"fanomena gmbh","2":"8","3":"DEC"},{"1":"saarländischer schwesternverband e.v.","2":"8","3":"DEC"},{"1":"victor's unternehmensgruppe","2":"8","3":"DEC"},{"1":"it inkubator gmbh","2":"8","3":"DEC"},{"1":"varitec ag","2":"8","3":"DEC"},{"1":"ihk saarland","2":"7","3":"DEC"},{"1":"caritasklinikum saarbrücken","2":"7","3":"DEC"},{"1":"sematell gmbh","2":"7","3":"DEC"},{"1":"intel visual computing institute","2":"7","3":"DEC"},{"1":"chambre de commerce française en allemagne (ccfa)","2":"7","3":"DEC"},{"1":"abresa gmbh","2":"7","3":"DEC"},{"1":"dept of education","2":"7","3":"DEC"},{"1":"mjr pharmjet gmbh","2":"7","3":"DEC"},{"1":"sparkasse neunkirchen","2":"7","3":"DEC"},{"1":"totalinx","2":"7","3":"DEC"},{"1":"saarländischer rundfunk","2":"7","3":"DEC"},{"1":"billomat gmbh & co. kg","2":"6","3":"DEC"},{"1":"ilc gmbh","2":"6","3":"DEC"},{"1":"tu dresden","2":"1514","3":"DED"},{"1":"asklepios","2":"840","3":"DED"},{"1":"university of leipzig","2":"700","3":"DED"},{"1":"comparex","2":"595","3":"DED"},{"1":"t-systems multimedia solutions gmbh","2":"405","3":"DED"},{"1":"mdr mitteldeutscher rundfunk","2":"368","3":"DED"},{"1":"dde","2":"246","3":"DED"},{"1":"schnellecke logistics","2":"239","3":"DED"},{"1":"tu chemnitz","2":"226","3":"DED"},{"1":"universität leipzig","2":"157","3":"DED"},{"1":"architekturbüro","2":"157","3":"DED"},{"1":"spreadshirt","2":"155","3":"DED"},{"1":"helmholtz-zentrum dresden-rossendorf","2":"149","3":"DED"},{"1":"hhl leipzig graduate school of management","2":"143","3":"DED"},{"1":"aerologic","2":"136","3":"DED"},{"1":"kwv","2":"131","3":"DED"},{"1":"mpi-cbg","2":"124","3":"DED"},{"1":"einzelunternehmer","2":"108","3":"DED"},{"1":"technische universität chemnitz","2":"104","3":"DED"},{"1":"komsa ag","2":"102","3":"DED"},{"1":"diakonie","2":"102","3":"DED"},{"1":"pc-ware","2":"93","3":"DED"},{"1":"european energy exchange ag","2":"92","3":"DED"},{"1":"grundschulen","2":"92","3":"DED"},{"1":"chemnitz university of technology","2":"90","3":"DED"},{"1":"unternehmertum – zentrum für innovation und gründung an der tu münchen","2":"90","3":"DED"},{"1":"vandelay industries","2":"89","3":"DED"},{"1":"von ardenne gmbh","2":"89","3":"DED"},{"1":"htwk leipzig","2":"84","3":"DED"},{"1":"praxis für ergotherapie","2":"81","3":"DED"},{"1":"fraunhofer institute for ceramic technologies and systems ikts","2":"80","3":"DED"},{"1":"max-planck-institute for evolutionary anthropology","2":"78","3":"DED"},{"1":"plastic logic","2":"75","3":"DED"},{"1":"leipziger messe gmbh","2":"71","3":"DED"},{"1":"cyberport","2":"66","3":"DED"},{"1":"preh car connect gmbh","2":"65","3":"DED"},{"1":"mercateo","2":"63","3":"DED"},{"1":"unitedprint se","2":"61","3":"DED"},{"1":"fit+mobil","2":"58","3":"DED"},{"1":"unister gmbh","2":"58","3":"DED"},{"1":"dresden international school","2":"58","3":"DED"},{"1":"fraunhofer institute for cell therapy and immunology","2":"56","3":"DED"},{"1":"lovoo","2":"56","3":"DED"},{"1":"porsche leipzig gmbh","2":"56","3":"DED"},{"1":"weidplas gmbh","2":"56","3":"DED"},{"1":"centro de biotecnologia da amazônia","2":"52","3":"DED"},{"1":"deutsche accumotive gmbh & co. kg","2":"50","3":"DED"},{"1":"zpg plc","2":"50","3":"DED"},{"1":"fraunhofer ipms","2":"49","3":"DED"},{"1":"epago","2":"48","3":"DED"},{"1":"lufthansa bombardier aviation services","2":"48","3":"DED"},{"1":"qiq qcentris intelligent quality gmbh","2":"47","3":"DED"},{"1":"saveco","2":"47","3":"DED"},{"1":"fraunhofer enas","2":"46","3":"DED"},{"1":"ehrhardt + partner gmbh & co. kg","2":"43","3":"DED"},{"1":"postbank finanzberatung","2":"43","3":"DED"},{"1":"aok plus","2":"42","3":"DED"},{"1":"zmdi","2":"42","3":"DED"},{"1":"robotron datenbank-software gmbh","2":"41","3":"DED"},{"1":"bank für sozialwirtschaft ag","2":"41","3":"DED"},{"1":"eka","2":"40","3":"DED"},{"1":"3d-micromac ag","2":"40","3":"DED"},{"1":"pitzi","2":"40","3":"DED"},{"1":"kiwigrid gmbh","2":"39","3":"DED"},{"1":"das environmental expert gmbh","2":"38","3":"DED"},{"1":"architekturbüro","2":"37","3":"DED"},{"1":"opterra gmbh, a crh company","2":"37","3":"DED"},{"1":"lecturio gmbh","2":"37","3":"DED"},{"1":"pro-pharma llc","2":"35","3":"DED"},{"1":"mellowmessage gmbh | digital marketing agentur für b2b unternehmen","2":"35","3":"DED"},{"1":"saxoprint","2":"35","3":"DED"},{"1":"oui gruppe gmbh & co.kg","2":"34","3":"DED"},{"1":"fraunhofer imw","2":"34","3":"DED"},{"1":"synexus clinical research gmbh","2":"33","3":"DED"},{"1":"las vegas","2":"33","3":"DED"},{"1":"otto group solution provider (osp)","2":"33","3":"DED"},{"1":"dental tribune international","2":"33","3":"DED"},{"1":"freistaat sachsen","2":"33","3":"DED"},{"1":"max planck institute for mathematics in the sciences","2":"32","3":"DED"},{"1":"staffbase (#1 employee app solution)","2":"32","3":"DED"},{"1":"universitätsklinikum leipzig","2":"32","3":"DED"},{"1":"iproplan planungsgesellschaft mbh","2":"32","3":"DED"},{"1":"elbe flugzeugwerke gmbh","2":"32","3":"DED"},{"1":"esi iti (simulationx)","2":"31","3":"DED"},{"1":"communardo software gmbh","2":"31","3":"DED"},{"1":"fraunhofer fep","2":"31","3":"DED"},{"1":"heliatek gmbh","2":"31","3":"DED"},{"1":"queo gmbh","2":"30","3":"DED"},{"1":"arts - extending your success","2":"30","3":"DED"},{"1":"händlerbund e.v.","2":"29","3":"DED"},{"1":"weishaupt","2":"29","3":"DED"},{"1":"albis-elcon","2":"29","3":"DED"},{"1":"ipoque","2":"29","3":"DED"},{"1":"berufskolleg","2":"29","3":"DED"},{"1":"ais automation dresden gmbh","2":"29","3":"DED"},{"1":"fraunhofer institute for integrated circuits iis, design automation division eas","2":"29","3":"DED"},{"1":"vosla gmbh","2":"29","3":"DED"},{"1":"itaricon digital customer solutions","2":"28","3":"DED"},{"1":"systema gmbh","2":"28","3":"DED"},{"1":"unister holding gmbh","2":"27","3":"DED"},{"1":"ibm client innovation centers europe","2":"589","3":"DEE"},{"1":"otto-von-guericke university magdeburg","2":"199","3":"DEE"},{"1":"idt biologika","2":"179","3":"DEE"},{"1":"leibniz institute for neurobiology","2":"49","3":"DEE"},{"1":"fraunhofer institute for factory operation and automation iff","2":"46","3":"DEE"},{"1":"pflegeheim","2":"44","3":"DEE"},{"1":"regiocom gmbh","2":"43","3":"DEE"},{"1":"solibro gmbh","2":"35","3":"DEE"},{"1":"ifa rotorion - powertrain gmbh","2":"33","3":"DEE"},{"1":"cbw","2":"30","3":"DEE"},{"1":"leibniz institute of plant biochemistry","2":"30","3":"DEE"},{"1":"schuberth","2":"27","3":"DEE"},{"1":"dekra se","2":"27","3":"DEE"},{"1":"max planck institute of microstructure physics","2":"26","3":"DEE"},{"1":"vem motors gmbh","2":"25","3":"DEE"},{"1":"förderschule","2":"23","3":"DEE"},{"1":"evolution personalvermittlungsgesellschaft mbh","2":"22","3":"DEE"},{"1":"universitätsklinikum halle (saale)","2":"20","3":"DEE"},{"1":"k&m group","2":"19","3":"DEE"},{"1":"borek it sourcing pvt. ltd.","2":"18","3":"DEE"},{"1":"mkm mansfelder kupfer und messing","2":"17","3":"DEE"},{"1":"icubic ag","2":"15","3":"DEE"},{"1":"borek media gmbh","2":"15","3":"DEE"},{"1":"mwg","2":"15","3":"DEE"},{"1":"mibe gmbh arzneimittel","2":"14","3":"DEE"},{"1":"leibniz-institut für wirtschaftsforschung halle (iwh)","2":"14","3":"DEE"},{"1":"fangmann energy services","2":"14","3":"DEE"},{"1":"yourserveradmin","2":"13","3":"DEE"},{"1":"colruyt","2":"13","3":"DEE"},{"1":"pwu","2":"13","3":"DEE"},{"1":"top shop","2":"12","3":"DEE"},{"1":"zra, llc","2":"12","3":"DEE"},{"1":"probiodrug","2":"12","3":"DEE"},{"1":"addinol lube oil gmbh","2":"12","3":"DEE"},{"1":"mitteldeutsche netzgesellschaft strom mbh","2":"11","3":"DEE"},{"1":"pumpenfabrik wangen gmbh","2":"11","3":"DEE"},{"1":"calyxo gmbh","2":"11","3":"DEE"},{"1":"zellstoff stendal gmbh","2":"11","3":"DEE"},{"1":"balfour beatty rail gmbh","2":"11","3":"DEE"},{"1":"vhs-bildungswerk gmbh","2":"11","3":"DEE"},{"1":"global young academy","2":"11","3":"DEE"},{"1":"motionworks gmbh","2":"10","3":"DEE"},{"1":"cbos","2":"10","3":"DEE"},{"1":"sap ucc magdeburg","2":"10","3":"DEE"},{"1":"nessa","2":"10","3":"DEE"},{"1":"ilsenburger grobblech gmbh","2":"10","3":"DEE"},{"1":"kötter security","2":"10","3":"DEE"},{"1":"sovello ag","2":"10","3":"DEE"},{"1":"2b ahead thinktank","2":"10","3":"DEE"},{"1":"haftpflichtkasse darmstadt","2":"10","3":"DEE"},{"1":"eurokommerz","2":"9","3":"DEE"},{"1":"csie","2":"9","3":"DEE"},{"1":"milk and honey","2":"9","3":"DEE"},{"1":"bloopark systems gmbh & co. kg","2":"9","3":"DEE"},{"1":"leibniz institute for neurobiology","2":"9","3":"DEE"},{"1":"dow olefinverbund gmbh","2":"9","3":"DEE"},{"1":"lintra","2":"9","3":"DEE"},{"1":"ioclarity","2":"9","3":"DEE"},{"1":"wimex s.r.l.","2":"9","3":"DEE"},{"1":"sensotech gmbh","2":"9","3":"DEE"},{"1":"schirm gmbh","2":"9","3":"DEE"},{"1":"wäscherei","2":"9","3":"DEE"},{"1":"travelping gmbh","2":"8","3":"DEE"},{"1":"ics adminservice gmbh","2":"8","3":"DEE"},{"1":"thermolux","2":"8","3":"DEE"},{"1":"klinikum magdeburg","2":"8","3":"DEE"},{"1":"investitions- und marketinggesellschaft sachsen-anhalt mbh","2":"8","3":"DEE"},{"1":"bg klinikum bergmannstrost halle","2":"8","3":"DEE"},{"1":"transformations","2":"8","3":"DEE"},{"1":"promecon","2":"8","3":"DEE"},{"1":"dögel gmbh","2":"8","3":"DEE"},{"1":"prologa gmbh","2":"8","3":"DEE"},{"1":"skw stickstoffwerke piesteritz gmbh","2":"8","3":"DEE"},{"1":"ikk gesund plus","2":"7","3":"DEE"},{"1":"kulturstiftung des bundes","2":"7","3":"DEE"},{"1":"doppstadt calbe gmbh","2":"7","3":"DEE"},{"1":"innotec deutschland","2":"7","3":"DEE"},{"1":"baxter oncology gmbh","2":"7","3":"DEE"},{"1":"schiess gmbh","2":"7","3":"DEE"},{"1":"mol katalysatortechnik gmbh","2":"7","3":"DEE"},{"1":"traductio übersetzungen & sprachtraining","2":"7","3":"DEE"},{"1":"demos gesellschaft für e-partizipation mbh","2":"7","3":"DEE"},{"1":"sonotec ultrasonic solutions","2":"6","3":"DEE"},{"1":"citim gmbh","2":"6","3":"DEE"},{"1":"rudolf hensel gmbh","2":"6","3":"DEE"},{"1":"klemme ag","2":"6","3":"DEE"},{"1":"velde boilers and plants gmbh","2":"6","3":"DEE"},{"1":"verlag fuer chemische industrie","2":"6","3":"DEE"},{"1":"chocotech gmbh","2":"6","3":"DEE"},{"1":"kraiburg relastec gmbh & co. kg","2":"6","3":"DEE"},{"1":"procom-bestmann","2":"6","3":"DEE"},{"1":"connex steuer- und wirtschaftsberatung gmbh","2":"6","3":"DEE"},{"1":"relaxdays gmbh","2":"6","3":"DEE"},{"1":"nowtilus onlinevertriebsgesellschaft mbh","2":"6","3":"DEE"},{"1":"quinsol","2":"6","3":"DEE"},{"1":"digital images","2":"6","3":"DEE"},{"1":"ultra tendency","2":"6","3":"DEE"},{"1":"slm kunststofftechnik gmbh","2":"6","3":"DEE"},{"1":"advanto software","2":"6","3":"DEE"},{"1":"embedded office","2":"5","3":"DEE"},{"1":"dräger","2":"2980","3":"DEF"},{"1":"tesa se","2":"783","3":"DEF"},{"1":"lufthansa industry solutions","2":"276","3":"DEF"},{"1":"aco","2":"250","3":"DEF"},{"1":"yamaha music europe","2":"229","3":"DEF"},{"1":"oldendorff carriers gmbh & co. kg","2":"214","3":"DEF"},{"1":"minimax gmbh & co. kg","2":"193","3":"DEF"},{"1":"sysmex europe","2":"191","3":"DEF"},{"1":"helmholtz-zentrum geesthacht zentrum für material- und küstenforschung","2":"163","3":"DEF"},{"1":"basler ag","2":"142","3":"DEF"},{"1":"comdirect bank ag","2":"141","3":"DEF"},{"1":"psychotherapeutische praxis","2":"127","3":"DEF"},{"1":"europa-universität flensburg","2":"118","3":"DEF"},{"1":"bilfinger greylogix gmbh","2":"111","3":"DEF"},{"1":"secop","2":"108","3":"DEF"},{"1":"bs payone gmbh","2":"96","3":"DEF"},{"1":"getriebebau nord gmbh & co. kg","2":"83","3":"DEF"},{"1":"behörde für schule und berufsbildung","2":"80","3":"DEF"},{"1":"johnson & johnson medical gmbh","2":"80","3":"DEF"},{"1":"raytheon anschuetz","2":"78","3":"DEF"},{"1":"euroimmun medizinische labordiagnostika ag","2":"75","3":"DEF"},{"1":"european xfel","2":"71","3":"DEF"},{"1":"universitätsklinikum schleswig-holstein","2":"66","3":"DEF"},{"1":"allergopharma gmbh & co. kg","2":"65","3":"DEF"},{"1":"lpc","2":"63","3":"DEF"},{"1":"minimax","2":"59","3":"DEF"},{"1":"fleggaard","2":"58","3":"DEF"},{"1":"university of applied sciences lübeck","2":"57","3":"DEF"},{"1":"tt-line","2":"57","3":"DEF"},{"1":"praxis für psychotherapie","2":"56","3":"DEF"},{"1":"menck gmbh","2":"55","3":"DEF"},{"1":"dr. klein & co. ag","2":"55","3":"DEF"},{"1":"eyes and more","2":"55","3":"DEF"},{"1":"hellermanntyton deutschland","2":"49","3":"DEF"},{"1":"universität zu lübeck","2":"47","3":"DEF"},{"1":"hier","2":"45","3":"DEF"},{"1":"bod (books on demand)","2":"44","3":"DEF"},{"1":"slm solutions group ag","2":"44","3":"DEF"},{"1":"fipo group","2":"44","3":"DEF"},{"1":"ghd gesundheits gmbh deutschland","2":"43","3":"DEF"},{"1":"designa gmbh","2":"42","3":"DEF"},{"1":"darag deutsche versicherungs- und rückversicherungs-ag","2":"41","3":"DEF"},{"1":"intermed","2":"41","3":"DEF"},{"1":"queisser pharma","2":"38","3":"DEF"},{"1":"nobiskrug gmbh","2":"36","3":"DEF"},{"1":"köster gmbh","2":"35","3":"DEF"},{"1":"kiel institute for the world economy","2":"34","3":"DEF"},{"1":"baader linco","2":"34","3":"DEF"},{"1":"secop","2":"34","3":"DEF"},{"1":"sauer compressors","2":"33","3":"DEF"},{"1":"vivanco","2":"33","3":"DEF"},{"1":"zbw - leibniz-informationszentrum wirtschaft","2":"33","3":"DEF"},{"1":"wirtschaftsakademie schleswig-holstein gmbh","2":"32","3":"DEF"},{"1":"raffinerie heide gmbh","2":"32","3":"DEF"},{"1":"esl","2":"31","3":"DEF"},{"1":"fls – fast lean smart","2":"31","3":"DEF"},{"1":"tomra sorting mining","2":"30","3":"DEF"},{"1":"gebeco","2":"30","3":"DEF"},{"1":"schön klinik bad bramstedt","2":"30","3":"DEF"},{"1":"vehrs inc.","2":"29","3":"DEF"},{"1":"interschalt maritime systems ag","2":"29","3":"DEF"},{"1":"garten- und landschaftsbau","2":"29","3":"DEF"},{"1":"casio europe gmbh","2":"29","3":"DEF"},{"1":"consensus","2":"28","3":"DEF"},{"1":"mankenberg gmbh","2":"28","3":"DEF"},{"1":"aequitas group","2":"27","3":"DEF"},{"1":"formaxx ag","2":"27","3":"DEF"},{"1":"unisafe","2":"27","3":"DEF"},{"1":"lapmaster wolters gmbh","2":"27","3":"DEF"},{"1":"gebäudereinigung","2":"26","3":"DEF"},{"1":"kfh kuratorium für dialyse und nierentransplantation e.v.","2":"26","3":"DEF"},{"1":"logopak systeme gmbh & co. kg","2":"25","3":"DEF"},{"1":"max planck institute for evolutionary biology","2":"25","3":"DEF"},{"1":"plato ag","2":"24","3":"DEF"},{"1":"frs förde reederei seetouristik gmbh & co. kg","2":"24","3":"DEF"},{"1":"mho","2":"24","3":"DEF"},{"1":"markenfilm gmbh & co kg","2":"24","3":"DEF"},{"1":"mrt services","2":"23","3":"DEF"},{"1":"infodesign","2":"22","3":"DEF"},{"1":"nordmark arzneimittel gmbh & co. kg","2":"22","3":"DEF"},{"1":"hausmann immobilien beratung makler und verwalter","2":"21","3":"DEF"},{"1":"qda solutions","2":"21","3":"DEF"},{"1":"drager medical gmbh","2":"21","3":"DEF"},{"1":"vitalaire gmbh","2":"20","3":"DEF"},{"1":"pohl boskamp","2":"20","3":"DEF"},{"1":"dvse gmbh","2":"20","3":"DEF"},{"1":"bernt lorentz gmbh & co. kg","2":"20","3":"DEF"},{"1":"hela spice canada inc.","2":"20","3":"DEF"},{"1":"detlev louis motorradvertriebs gmbh","2":"20","3":"DEF"},{"1":"taplow executive search","2":"19","3":"DEF"},{"1":"stadtwerke kiel ag","2":"19","3":"DEF"},{"1":"storecast","2":"19","3":"DEF"},{"1":"mint media interactive software systems gmbh","2":"19","3":"DEF"},{"1":"schwartauer werke gmbh & co. kgaa","2":"19","3":"DEF"},{"1":"elbkinder - vereinigung hamburger kindertagesstätten ggmbh","2":"18","3":"DEF"},{"1":"m-u-t ag","2":"18","3":"DEF"},{"1":"trioptics gmbh optische instrumente","2":"18","3":"DEF"},{"1":"addix inc.","2":"18","3":"DEF"},{"1":"waldorfschule","2":"18","3":"DEF"},{"1":"autoflug gmbh","2":"18","3":"DEF"},{"1":"carl zeiss meditec ag","2":"1348","3":"DEG"},{"1":"zeiss microscopy","2":"627","3":"DEG"},{"1":"x-fab","2":"413","3":"DEG"},{"1":"tu ilmenau","2":"361","3":"DEG"},{"1":"masdar (abu dhabi future energy company)","2":"264","3":"DEG"},{"1":"jenoptik ag","2":"190","3":"DEG"},{"1":"analytik jena ag","2":"138","3":"DEG"},{"1":"intershop communications","2":"125","3":"DEG"},{"1":"telemotive ag","2":"111","3":"DEG"},{"1":"university of erfurt","2":"97","3":"DEG"},{"1":"allied vision","2":"93","3":"DEG"},{"1":"schott technical glass solutions gmbh","2":"87","3":"DEG"},{"1":"stratec biomedical ag","2":"77","3":"DEG"},{"1":"jenoptik ag","2":"71","3":"DEG"},{"1":"leibniz institute for natural product research and infection biology - hans knöll institute","2":"62","3":"DEG"},{"1":"vistec","2":"59","3":"DEG"},{"1":"leibniz institute for age research - fritz lipmann institute (fli)","2":"53","3":"DEG"},{"1":"q-soft","2":"50","3":"DEG"},{"1":"max planck institute for biogeochemistry","2":"46","3":"DEG"},{"1":"sepp.med gmbh","2":"46","3":"DEG"},{"1":"dotsource gmbh","2":"46","3":"DEG"},{"1":"heimische landwirtschaft","2":"42","3":"DEG"},{"1":"stratec biomedical uk limited","2":"40","3":"DEG"},{"1":"fraunhofer idmt","2":"36","3":"DEG"},{"1":"robot","2":"36","3":"DEG"},{"1":"qundis gmbh","2":"34","3":"DEG"},{"1":"dussmann service deutschland gmbh","2":"33","3":"DEG"},{"1":"be excellent gmbh","2":"31","3":"DEG"},{"1":"x-label gmbh","2":"30","3":"DEG"},{"1":"gewo ( government employees welfare oganisation)","2":"30","3":"DEG"},{"1":"karsten tönniges","2":"29","3":"DEG"},{"1":"petkus technologie gmbh","2":"29","3":"DEG"},{"1":"seal systems ag","2":"25","3":"DEG"},{"1":"stiftung","2":"25","3":"DEG"},{"1":"bluechip computer ag","2":"25","3":"DEG"},{"1":"n3 engine overhaul services gmbh & co kg","2":"24","3":"DEG"},{"1":"docter optics gmbh","2":"24","3":"DEG"},{"1":"göpel electronic gmbh","2":"23","3":"DEG"},{"1":"easterngraphics","2":"22","3":"DEG"},{"1":"bauhaus-universität weimar","2":"22","3":"DEG"},{"1":"gzs","2":"20","3":"DEG"},{"1":"mitec automotive ag","2":"20","3":"DEG"},{"1":"mypegasus gmbh","2":"20","3":"DEG"},{"1":"edeka markt","2":"19","3":"DEG"},{"1":"asclepion laser technologies gmbh","2":"19","3":"DEG"},{"1":"rosskopf & partner ag","2":"18","3":"DEG"},{"1":"ruhlamat gmbh","2":"17","3":"DEG"},{"1":"saller","2":"17","3":"DEG"},{"1":"iubh duales studium","2":"17","3":"DEG"},{"1":"modis it outsourcing gmbh","2":"16","3":"DEG"},{"1":"fefa","2":"16","3":"DEG"},{"1":"vossloh-schwabe deutschland gmbh","2":"16","3":"DEG"},{"1":"di-soric gmbh & co. kg","2":"16","3":"DEG"},{"1":"e.l.t. the english language trainers gmbh","2":"15","3":"DEG"},{"1":"goepel electronics","2":"14","3":"DEG"},{"1":"epc engineering consulting gmbh","2":"14","3":"DEG"},{"1":"igniti gmbh","2":"14","3":"DEG"},{"1":"ibykus ag für informationstechnologie","2":"14","3":"DEG"},{"1":"hammel recyclingtechnik gmbh","2":"14","3":"DEG"},{"1":"indu-sol gmbh","2":"14","3":"DEG"},{"1":"ezono ag","2":"14","3":"DEG"},{"1":"ibu-tec advanced materials ag","2":"14","3":"DEG"},{"1":"jena-optronik gmbh","2":"14","3":"DEG"},{"1":"cuculus gmbh","2":"13","3":"DEG"},{"1":"kahla/thüringen porzellan gmbh","2":"13","3":"DEG"},{"1":"schott solar wafer gmbh","2":"13","3":"DEG"},{"1":"jenoptik optical systems gmbh","2":"13","3":"DEG"},{"1":"k-utec ag salt technologies","2":"13","3":"DEG"},{"1":"emergency medical service","2":"12","3":"DEG"},{"1":"klassik stiftung weimar","2":"12","3":"DEG"},{"1":"quorion data systems gmbh","2":"12","3":"DEG"},{"1":"ironshark gmbh","2":"12","3":"DEG"},{"1":"ajz engineering gmbh","2":"12","3":"DEG"},{"1":"jena business development","2":"12","3":"DEG"},{"1":"friseur masson ag","2":"12","3":"DEG"},{"1":"agroservice","2":"11","3":"DEG"},{"1":"schock metallwerk gmbh","2":"11","3":"DEG"},{"1":"marien apotheke","2":"11","3":"DEG"},{"1":"srh zentralklinikum suhl","2":"11","3":"DEG"},{"1":"thüringer landesrechenzentrum","2":"11","3":"DEG"},{"1":"schmidt technology gmbh","2":"11","3":"DEG"},{"1":"eschbachit gmbh","2":"11","3":"DEG"},{"1":"imms ggmbh","2":"11","3":"DEG"},{"1":"thimm packaging","2":"11","3":"DEG"},{"1":"masdar pv gmbh","2":"11","3":"DEG"},{"1":"betreuung zu hause e.v.","2":"11","3":"DEG"},{"1":"klinikum bad salzungen gmbh","2":"11","3":"DEG"},{"1":"conventus congressmanagement & marketing gmbh","2":"11","3":"DEG"},{"1":"cybio","2":"10","3":"DEG"},{"1":"qsil quarzschmelze ilmenau gmbh","2":"10","3":"DEG"},{"1":"messe erfurt gmbh","2":"10","3":"DEG"},{"1":"gutmann group","2":"10","3":"DEG"},{"1":"schöler gmbh","2":"10","3":"DEG"},{"1":"hm informatik ag","2":"10","3":"DEG"},{"1":"bfe institut für energie und umwelt gmbh","2":"10","3":"DEG"},{"1":"ageto","2":"10","3":"DEG"},{"1":"thüringer aufbaubank","2":"10","3":"DEG"},{"1":"xceptance","2":"10","3":"DEG"},{"1":"7s group gmbh","2":"9","3":"DEG"},{"1":"innovent e.v. technologieentwicklung jena","2":"9","3":"DEG"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><strong>Note:</strong> some companies might be attributed to a wrong location in these datasets. This can happen because there were some mistakes and inconsistencies in the given location of each company in the original data. Nevertheless, these are supposed only to serve as example to produce working wordcloud maps, so we have not tried to identify and correct any of these possible misattributions.</p>
+<p><br></p>
+<hr />
+</div>
+</div>
+<div id="plotting-with-wordcloud_map" class="section level2">
+<h2>Plotting with <code>wordcloud_map()</code></h2>
+<div id="arguments-overview" class="section level3">
+<h3>Arguments overview</h3>
+<p>The main function of the <code>wordcloud.mappeR</code> package is <strong><code>wordcloud_map()</code></strong>. This is the function that takes in the input data and plots the wordcloud map according to the parameters defined by the user. These are the arguments that the function requires and their specifications:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>wordcloud.mappeR<span class="sc">::</span><span class="fu">wordcloud_map</span>(dataframe, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                country, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                                level_nuts, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                name_column_words, </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                                name_column_frequency, </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                                name_column_nuts,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                rm_outside,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                scale,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                png_path)</span></code></pre></div>
+<style>
+div.highlight {background-color:#f3f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class="highlight">
+<table>
+<colgroup>
+<col width="13%" />
+<col width="13%" />
+<col width="73%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Arguments</th>
+<th align="left">Data type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>dataframe</code></td>
+<td align="left"><em>dataframe</em></td>
+<td align="left">The dataframe containing the input data.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>country</code></td>
+<td align="left"><em>character</em></td>
+<td align="left">The corresponding ISO 3 code of the country. See <a href="wikipedia.org/wiki/ISO_3166-1_alpha-3">wikipedia.org/wiki/ISO_3166-1_alpha-3</a> for a list of all country codes.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>level_nuts</code></td>
+<td align="left"><em>integer</em></td>
+<td align="left">The NUTS level to which the NUTS codes correspond. Must be either <code>1</code>, <code>2</code> or <code>3</code>.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>name_column_words</code></td>
+<td align="left"><em>character</em></td>
+<td align="left">The name of the column in <code>dataframe</code> containing the words.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>name_column_frequency</code></td>
+<td align="left"><em>character</em></td>
+<td align="left">The name of the column in <code>dataframe</code> containing the frequencies.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>name_column_nuts</code></td>
+<td align="left"><em>character</em></td>
+<td align="left">The name of the column in <code>dataframe</code> containing the NUTS codes.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>max_word_size</code></td>
+<td align="left"><em>numeric</em></td>
+<td align="left">The maximum size of the words in the wordcloud. At the minimum value <code>1</code> all the words are equally sized. Default is <code>4</code>.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>rm_outside</code></td>
+<td align="left"><em>logical</em></td>
+<td align="left">Whether to remove words that could not be fitted in the wordcloud area. If set to <code>FALSE</code>, these words will be stacked on top of each other at the centre of each region. Default is <code>TRUE</code>.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>scale</code></td>
+<td align="left"><em>character</em></td>
+<td align="left">The desired scale of the regions to be used as the shape of the wordcloud. Must be either <code>"03"</code>, <code>"10"</code>, <code>"20"</code> or <code>"60"</code>. Default is <code>"10"</code>.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>png_path</code></td>
+<td align="left"><em>character</em></td>
+<td align="left">Path where the png image will be saved to, keeping the original aspect ratio of the country. Default is <code>"False"</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><br></p>
+<p>For example, to reproduce the wordcloud maps shown at the top of this page, you can pass the following values to the <code>wordcloud_map()</code> function:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wordcloud map for Germany NUTS 1</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud_map</span>(companies_DEU, <span class="st">&quot;DEU&quot;</span>, <span class="dv">1</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;employees&quot;</span>, <span class="st">&quot;code&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Wordcloud map for Italy NUTS 2</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud_map</span>(companies_ITA, <span class="st">&quot;ITA&quot;</span>, <span class="dv">2</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;employees&quot;</span>, <span class="st">&quot;code&quot;</span>)</span></code></pre></div>
+<p><br></p>
+<hr />
+</div>
+<div id="the-rm_outside-argument" class="section level3">
+<h3>The <code>rm_outside</code> argument</h3>
+<p>The <code>rm_outside</code> argument is one inherited from the <a href="https://lepennec.github.io/ggwordcloud"><code>ggwordcloud</code></a> package, which is used to generate the wordclouds here. It determines whether to <strong>remove words that could not be fitted</strong> in the given wordcloud area. When set to <code>FALSE</code>, it stacks all these words on top of each other at the centre of each region. For example, this is how the previous plots of Germany and Italy look like when <code>rm_outside = FALSE</code>:</p>
+<p><img src="index_files/images/merged_rm_outsidepng.png" title="When rm_outside = FALSE" /></p>
+<p><strong>It is not always an issue</strong> when words are not able to fit the wordcloud and are removed. The <strong>order in which words are plotted is based`on descending frequency values</strong> (i.e. the most frequent words are plotted first). So when datasets have too many words, the least important ones (i.e. the ones with lower frequencies) are the ones who will be removed when there is no more space to fit words in the given area.</p>
+<p>Nevertheless, there are cases in which important words might be removed against your wish. So here a few reasons why some words will not be able to fit the wordcloud:</p>
+<ul>
+<li><strong>When the shape of a region is too narrow</strong>. Words will not have enough space to fit when there is not enough available width.</li>
+<li><strong>When words are very long</strong>. Such words require extra wide areas to fit the plot.</li>
+<li><strong>When there is not much variance in the frequencies of the most frequent words</strong>. In that case, the first words will all try to be plotted with similar (large) sizes, meaning the available space will quickly run out and only smaller words will manage to fit.</li>
+<li><strong>When there are too many words in the dataframe</strong>. Reducing the number of observations (i.e. rows) in the dataframe will help avoiding this.</li>
+</ul>
+<p>A way to try to <strong>fix</strong> - or at least improve - this issue is by tweaking the argument <code>max_word_size</code> (see below). We recommend setting <code>rm_outside = FALSE</code> to see which words are not fitting and then decreasing the <code>max_word_size</code> until you are happy with the result.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="the-max_word_size-argument" class="section level3">
+<h3>The <code>max_word_size</code> argument</h3>
+<p>The <code>max_word_size</code> argument defines the <strong>maximum allowed size</strong> for the words being plotted in the wordcloud. The minimum value is <code>1</code>, where all the words are equally sized, independent of their frequency values. The default value is <code>4</code>, but you might want to try to increase or decrease this value.</p>
+<p>Increasing this number will make words with higher frequency values stand out more clearly from smaller ones. However, if these words are too big, they will not fit the wordcloud shape. This will make them either be plotted on top of other words (if <code>rm_outside = FALSE</code>) or be removed completely from the wordcloud (if <code>rm_outside = TRUE</code>).</p>
+<p><img src="index_files/images/max_10.png" title="When max_word_size = 10" /></p>
+<p><br></p>
+<hr />
+</div>
+<div id="the-scale-argument" class="section level3">
+<h3>The <code>scale</code> argument</h3>
+<p>The <code>scale</code> argument refers to the scale used for the regions’ polygon shapes. What matters here is whether a smaller or larger scale is selected, as they have inverse effects on the process and output:</p>
+<ul>
+<li><strong>Smaller</strong> scales (e.g. <code>"03"</code>) mean <strong>more detailed</strong> polygon shapes.
+<ul>
+<li>Advantage: regions look more real (as the borders are more detailed).</li>
+<li>Disadvantage: code takes longer to run (due to the larger shapefile being used for each region).</li>
+</ul></li>
+<li><strong>Larger</strong> scales (e.g. <code>"60"</code>) mean <strong>less detailed</strong> and more “blocky-looking” shapes.
+<ul>
+<li>Advantage: code is quicker (due to the smaller shapefile being used for each region).</li>
+<li>Disadvantage: regions look less real (as the borders are more simplified and “straight”)</li>
+</ul></li>
+</ul>
+<p>Here is an example of how the polygon shape of a region changes according to each different scale (credit <a href="https://cran.r-project.org/web/packages/giscoR/readme/README.html">giscoR</a>):</p>
+<p><img src="index_files/images/scales.png" title="The 4 available scales" /></p>
+</div>
+</div>
+</div>
+
+&nbsp;
+<hr />
+<p style="text-align: center;">A work by Gabriel da Silva Zech, Julian Kath and Lorenzo Gini</a></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" >
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://github.com/GabZech/wordcloud.mappeR"  <i class="fab fa-github"></i><a>
+</p>
+
+&nbsp;
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
